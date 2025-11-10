@@ -108,8 +108,10 @@ export class PDFDocumentGenerator {
 
   // DOC 1: Contract Principal - COMPLET (5 pagini)
   async doc1_ContractPrincipal(): Promise<Blob> {
-    const { generateContractPrincipalComplete } = await import('./pdf-templates/contract-principal-complete');
-    return await generateContractPrincipalComplete(this.resident);
+    // TODO: Implement template-based generation
+    const doc = new jsPDF();
+    doc.text('Contract Principal - In Development', 20, 20);
+    return doc.output('blob');
   }
 
   // DOC 2: Cerere Admitere
