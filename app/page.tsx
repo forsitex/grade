@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation';
 import { 
   Users, Calendar, FileText, BarChart3, Zap, Image as ImageIcon,
   Shield, Clock, Heart, Star, ArrowRight, Sparkles, Baby, Bell, ChevronDown,
-  Rocket, TrendingUp, Award, CheckCircle2, Play, Menu, X
+  Rocket, TrendingUp, Award, CheckCircle2, Play, Menu, X, Brain, Scan, 
+  FileSearch, MessageSquare, Stethoscope, ClipboardCheck
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -184,6 +185,128 @@ export default function HomePage() {
                 <p className="text-gray-600">{f.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Features Section */}
+      <section className="py-20 px-6 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-20 left-20 w-96 h-96 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        </div>
+
+        <div className="container mx-auto max-w-6xl relative z-10">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-lg rounded-full mb-6 border border-white/20">
+              <Brain className="w-5 h-5 text-purple-300 animate-pulse" />
+              <span className="text-sm font-bold text-white">Powered by AI</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
+              Funcționalități AI 🤖
+            </h2>
+            <p className="text-xl text-purple-200 max-w-3xl mx-auto">
+              Inteligență artificială avansată pentru automatizare și analiză
+            </p>
+          </div>
+
+          {/* AI Cards Grid */}
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {[
+              {
+                icon: FileSearch,
+                title: 'Analiză Contracte',
+                desc: 'GPT-4o detectează automat câmpurile din contracte PDF',
+                features: ['Extragere automată date', 'Detectare câmpuri obligatorii', 'Format JSON structurat'],
+                color: 'from-blue-400 to-cyan-400',
+                badge: 'OpenAI'
+              },
+              {
+                icon: Stethoscope,
+                title: 'Analiză Imagini Medicale',
+                desc: 'Claude Vision analizează analize medicale și oferă recomandări',
+                features: ['Detectare valori anormale', 'Recomandări alimentație', 'Plan monitorizare'],
+                color: 'from-green-400 to-emerald-400',
+                badge: 'Claude Vision'
+              },
+              {
+                icon: BarChart3,
+                title: 'Rapoarte Financiare',
+                desc: 'Analizează bilanțuri și calculează indicatori financiari',
+                features: ['Calcul profit net', 'Identificare cheltuieli', 'Insights automate'],
+                color: 'from-orange-400 to-red-400',
+                badge: 'GPT-4o'
+              },
+              {
+                icon: MessageSquare,
+                title: 'Rapoarte Lunare Copii',
+                desc: 'Generează analiză detaliată a dezvoltării copilului',
+                features: ['Analiză prezență & mese', 'Sfaturi pentru părinți', 'Ton prietenos'],
+                color: 'from-pink-400 to-rose-400',
+                badge: 'Claude 3.5'
+              }
+            ].map((ai, i) => (
+              <div key={i} className="group relative">
+                {/* Glow effect */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${ai.color} opacity-0 group-hover:opacity-20 blur-xl transition-opacity rounded-3xl`}></div>
+                
+                {/* Card */}
+                <div className="relative bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 hover:bg-white/15 transition-all hover:scale-105">
+                  {/* Badge */}
+                  <div className="absolute top-4 right-4 px-3 py-1 bg-white/20 backdrop-blur-lg rounded-full text-xs font-bold text-white border border-white/30">
+                    {ai.badge}
+                  </div>
+
+                  {/* Icon */}
+                  <div className={`w-16 h-16 bg-gradient-to-br ${ai.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition shadow-lg`}>
+                    <ai.icon className="w-8 h-8 text-white" />
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="text-2xl font-bold text-white mb-3">{ai.title}</h3>
+                  <p className="text-purple-200 mb-6">{ai.desc}</p>
+
+                  {/* Features list */}
+                  <ul className="space-y-2">
+                    {ai.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm text-purple-100">
+                        <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
+            {[
+              { label: 'Modele AI', value: '2', icon: Brain },
+              { label: 'API Endpoints', value: '4', icon: Zap },
+              { label: 'Precizie', value: '95%', icon: Award },
+              { label: 'Cost/Lună', value: '$20', icon: TrendingUp }
+            ].map((stat, i) => (
+              <div key={i} className="text-center p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20">
+                <stat.icon className="w-8 h-8 text-purple-300 mx-auto mb-3" />
+                <div className="text-3xl font-black text-white mb-1">{stat.value}</div>
+                <div className="text-sm text-purple-200">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="text-center mt-12">
+            <button onClick={() => router.push('/register')} className="group px-10 py-5 bg-white text-purple-900 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/50 transition-all hover:scale-105">
+              <span className="flex items-center justify-center gap-3">
+                <Sparkles className="w-6 h-6 group-hover:rotate-12 transition" />
+                Testează AI Gratuit
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition" />
+              </span>
+            </button>
           </div>
         </div>
       </section>
