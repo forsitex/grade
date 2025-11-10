@@ -1,0 +1,155 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ========================================
+    // 1. MANAGER/ADMIN (Proprietar Grădiniță)
+    // ========================================
+    match /organizations/{userId} {
+      // Manager poate citi/scrie DOAR organizația sa
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Subcollections: locations, children, gallery, menus, etc.
+      match /locations/{locationId} {
+        // Manager poate citi/scrie toate locațiile sale
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+        
+        // Children (copii)
+        match /children/{cnp} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+        
+        // Gallery (galerie foto)
+        match /gallery/{photoId} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+        
+        // Menus (meniuri)
+        match /menus/{menuId} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+        
+        // Daily Reports (rapoarte zilnice)
+        match /dailyReports/{date}/{cnp} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+        
+        // Activities (activități)
+        match /activities/{activityId} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+        
+        // Attendance (prezență)
+        match /attendance/{date}/grupe/{grupaId}/copii/{cnp} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+      }
+    }
+    
+    // ========================================
+    // 2. EDUCATOARE
+    // ========================================
+    match /educatoare/{userId} {
+      // Educatoarea poate citi DOAR propriul document
+      allow read: if request.auth != null && request.auth.uid == userId;
+      // Doar admin-ul poate crea/actualiza (prin API)
+      allow write: if request.auth != null;
+    }
+    
+    // Educatoarea poate citi/scrie datele organizației sale
+    match /organizations/{orgId}/locations/{locationId} {
+      // Verifică dacă user-ul este educatoare în această organizație
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
+                     get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId;
+      
+      // Educatoarea poate scrie rapoarte zilnice și prezență
+      match /dailyReports/{date}/{cnp} {
+        allow write: if request.auth != null && 
+                        exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
+                        get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId;
+      }
+      
+      match /attendance/{date}/grupe/{grupaId}/copii/{cnp} {
+        allow write: if request.auth != null && 
+                        exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
+                        get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId;
+      }
+      
+      // Educatoarea poate uploada poze
+      match /gallery/{photoId} {
+        allow write: if request.auth != null && 
+                        exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
+                        get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId;
+      }
+    }
+    
+    // ========================================
+    // 3. PĂRINȚI
+    // ========================================
+    match /parinti/{userId} {
+      // Părintele poate citi DOAR propriul document
+      allow read: if request.auth != null && request.auth.uid == userId;
+      // Doar admin-ul poate crea/actualiza (prin API)
+      allow write: if request.auth != null;
+    }
+    
+    // Părintele poate citi datele DOAR despre copilul său
+    match /organizations/{orgId}/locations/{locationId} {
+      // Verifică dacă user-ul este părinte în această organizație
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                     get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId;
+      
+      // Părintele poate citi DOAR datele copilului său
+      match /children/{cnp} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.copilCnp == cnp;
+      }
+      
+      // Părintele poate citi DOAR rapoartele copilului său
+      match /dailyReports/{date}/{cnp} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.copilCnp == cnp;
+      }
+      
+      // Părintele poate citi DOAR prezența copilului său
+      match /attendance/{date}/grupe/{grupaId}/copii/{cnp} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.copilCnp == cnp;
+      }
+      
+      // Părintele poate citi DOAR pozele cu copilul său (se verifică în cod)
+      match /gallery/{photoId} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId;
+      }
+      
+      // Părintele poate citi activitățile grupei copilului său
+      match /activities/{activityId} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId;
+      }
+      
+      // Părintele poate citi meniurile
+      match /menus/{menuId} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId;
+      }
+    }
+    
+    // ========================================
+    // FALLBACK pentru Development
+    // ⚠️ COMENTEAZĂ în producție!
+    // ========================================
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
