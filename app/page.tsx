@@ -5,7 +5,7 @@ import {
   Users, Calendar, FileText, BarChart3, Zap, Image as ImageIcon,
   Shield, Clock, Heart, Star, ArrowRight, Sparkles, Baby, Bell, ChevronDown,
   Rocket, TrendingUp, Award, CheckCircle2, Play, Menu, X, Brain, Scan, 
-  FileSearch, MessageSquare, Stethoscope, ClipboardCheck
+  FileSearch, MessageSquare, Stethoscope, ClipboardCheck, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -14,6 +14,8 @@ export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [gradiniteSlide, setGradiniteSlide] = useState(0);
+  const [parintiSlide, setParintiSlide] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -161,30 +163,89 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-20 px-6">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Funcționalități Complete</h2>
-            <p className="text-xl text-gray-600">Tot ce ai nevoie pentru o grădiniță modernă</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { icon: Users, title: 'Gestionare Copii', desc: 'Administrează date complete', color: 'from-blue-500 to-cyan-500' },
-              { icon: Calendar, title: 'Activități', desc: 'Planifică și urmărește activități', color: 'from-purple-500 to-pink-500' },
-              { icon: FileText, title: 'Rapoarte', desc: 'Generează rapoarte automat', color: 'from-orange-500 to-red-500' },
-              { icon: BarChart3, title: 'Analytics', desc: 'Statistici detaliate', color: 'from-green-500 to-emerald-500' },
-              { icon: Zap, title: 'AI Powered', desc: 'Inteligență artificială', color: 'from-yellow-500 to-orange-500' },
-              { icon: ImageIcon, title: 'Galerie', desc: 'Partajează poze cu părinții', color: 'from-pink-500 to-rose-500' }
-            ].map((f, i) => (
-              <div key={i} className="group p-8 bg-white rounded-2xl border-2 border-gray-100 hover:border-transparent hover:shadow-2xl transition transform hover:-translate-y-2">
-                <div className={`w-16 h-16 bg-gradient-to-br ${f.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition`}>
-                  <f.icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">{f.title}</h3>
-                <p className="text-gray-600">{f.desc}</p>
+      {/* Features - Grădinițe & Părinți SIMPLE STYLE */}
+      <section className="py-20 px-6 bg-white">
+        <div className="container mx-auto max-w-7xl">
+          
+          {/* Grid 2 coloane: Stânga Grădinițe, Dreapta Părinți */}
+          <div className="grid lg:grid-cols-2 gap-16">
+            
+            {/* STÂNGA - Funcționalități Grădinițe */}
+            <div>
+              {/* Header */}
+              <div className="mb-6 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                  Funcționalități Grădinițe
+                </h2>
+                <p className="text-gray-600">
+                  Management complet pentru grădinițe moderne
+                </p>
               </div>
-            ))}
+
+              {/* Content Box */}
+              <div className="bg-gradient-to-br from-orange-50 to-pink-50 rounded-3xl p-10 border border-gray-200">
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { title: 'Gestionare Copii', count: '100+ Features' },
+                    { title: 'Activități', count: '50+ Templates' },
+                    { title: 'Prezență', count: 'Real-time' },
+                    { title: 'Rapoarte', count: 'Auto-generate' },
+                    { title: 'Galerie Foto', count: 'Unlimited' },
+                    { title: 'Grupe', count: 'Personalizate' },
+                    { title: 'Meniu AI', count: 'Smart' },
+                    { title: 'Analytics', count: 'Advanced' }
+                  ].map((item, i) => (
+                    <div 
+                      key={i} 
+                      className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 hover:shadow-xl hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-center opacity-0 animate-fade-in-up"
+                      style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'forwards' }}
+                    >
+                      <h3 className="font-semibold text-gray-900 text-sm mb-1">{item.title}</h3>
+                      <p className="text-xs text-gray-500">{item.count}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* DREAPTA - Funcționalități Părinți */}
+            <div>
+              {/* Header */}
+              <div className="mb-6 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                  Funcționalități Părinți
+                </h2>
+                <p className="text-gray-600">
+                  Portal dedicat - transparență totală
+                </p>
+              </div>
+
+              {/* Content Box */}
+              <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl p-10 border border-gray-200">
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { title: 'Dashboard Live', count: 'Real-time' },
+                    { title: 'Galerie Foto', count: 'Unlimited' },
+                    { title: 'Rapoarte Zilnice', count: 'Auto-send' },
+                    { title: 'Notificări', count: 'Instant' },
+                    { title: 'Meniu Săptămânal', count: 'Alergeni' },
+                    { title: 'Prezență', count: 'Live Tracking' },
+                    { title: 'Mesaje', count: 'Chat Direct' },
+                    { title: 'Progres', count: 'Analytics' }
+                  ].map((item, i) => (
+                    <div 
+                      key={i} 
+                      className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 hover:shadow-xl hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-center opacity-0 animate-fade-in-up"
+                      style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'forwards' }}
+                    >
+                      <h3 className="font-semibold text-gray-900 text-sm mb-1">{item.title}</h3>
+                      <p className="text-xs text-gray-500">{item.count}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -311,6 +372,66 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Free Trial Section */}
+      <section className="py-20 px-6 bg-gradient-to-br from-purple-50 to-pink-50">
+        <div className="container mx-auto max-w-7xl">
+          <div className="bg-white rounded-3xl border border-gray-200 shadow-lg py-16 px-12">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              
+              {/* STÂNGA - Text */}
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full">
+                  <Sparkles className="w-4 h-4 text-purple-600" />
+                  <span className="text-sm font-bold text-purple-900">Ofertă Specială</span>
+                </div>
+                
+                <h2 className="text-4xl font-bold text-gray-900">
+                  Testează <span className="text-purple-600">GRATUIT</span> 14 Zile
+                </h2>
+                
+                <p className="text-gray-600">
+                  Descoperă toate funcționalitățile platformei fără niciun cost.
+                </p>
+                
+                <button 
+                  onClick={() => router.push('/register')}
+                  className="px-6 py-3 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 transition flex items-center gap-2"
+                >
+                  <Rocket className="w-5 h-5" />
+                  Începe Perioada Gratuită
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+
+                <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                    <span>Fără card necesar</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                    <span>Anulare oricând</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                    <span>Acces complet</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* DREAPTA - Imagine 3D Gift */}
+              <div className="flex items-center justify-center">
+                <img 
+                  src="https://pub-940ccf6255b54fa799a9b01050e6c227.r2.dev/gift-3.png" 
+                  alt="14 Zile Gratuit" 
+                  className="w-full max-w-md object-contain"
+                />
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Benefits */}
       <section className="py-20 px-6 bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="container mx-auto max-w-6xl">
@@ -379,7 +500,7 @@ export default function HomePage() {
           <div className="space-y-4">
             {[
               { q: 'Ce este Platforma Grădinițe?', a: 'Sistem complet de management pentru grădinițe.' },
-              { q: 'Cât costă?', a: 'Planuri flexibile de la 99 RON/lună.' },
+              { q: 'Cât costă?', a: 'Planuri flexibile în funcție de numărul de copii.' },
               { q: 'Este sigură?', a: 'Da! Firebase cu encriptare end-to-end.' },
               { q: 'Portal părinți?', a: 'Da! Fiecare părinte are acces personalizat.' },
               { q: 'Suport tehnic?', a: 'Da! Suport 24/7 prin email și telefon.' }
