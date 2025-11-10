@@ -343,11 +343,11 @@ export default function HomePage() {
                 <div className="grid grid-cols-2 gap-4">
                   {[
                     { title: 'Dashboard Live', count: 'Real-time' },
-                    { title: 'Galerie Foto', count: 'Unlimited' },
+                    { title: 'Galerie Foto', count: 'Nelimitat' },
                     { title: 'Rapoarte Zilnice', count: 'Auto-send' },
                     { title: 'Notificări', count: 'Instant' },
                     { title: 'Meniu Săptămânal', count: 'Alergeni' },
-                    { title: 'Prezență', count: 'Live Tracking' },
+                    { title: 'Prezență', count: 'Monitorizare' },
                     { title: 'Mesaje', count: 'Chat Direct' },
                     { title: 'Progres', count: 'Analytics' }
                   ].map((item, i) => (
