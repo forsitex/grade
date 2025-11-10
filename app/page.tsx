@@ -349,7 +349,7 @@ export default function HomePage() {
               { label: 'Modele AI', value: '2', icon: Brain },
               { label: 'API Endpoints', value: '4', icon: Zap },
               { label: 'Precizie', value: '95%', icon: Award },
-              { label: 'Cost/Lună', value: '$20', icon: TrendingUp }
+              { label: 'Timp Economisit', value: '10h', icon: TrendingUp }
             ].map((stat, i) => (
               <div key={i} className="text-center p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20">
                 <stat.icon className="w-8 h-8 text-purple-300 mx-auto mb-3" />
