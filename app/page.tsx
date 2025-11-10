@@ -1,111 +1,299 @@
 'use client';
 
-import Link from 'next/link';
-import { BookOpen, Users, Calendar, FileText, BarChart3, Zap } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { 
+  Users, Calendar, FileText, BarChart3, Zap, Image as ImageIcon,
+  Shield, Clock, Heart, Star, ArrowRight, Sparkles, Baby, Bell, ChevronDown,
+  Rocket, TrendingUp, Award, CheckCircle2, Play, Menu, X
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-export default function Home() {
+export default function HomePage() {
+  const router = useRouter();
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-pink-50 to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <BookOpen className="w-8 h-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Platforma Grădinițe</h1>
+    <div className="min-h-screen bg-white">
+      {/* Navbar cu animație */}
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg' : 'bg-white/80 backdrop-blur-lg'
+      }`}>
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl blur opacity-75 animate-pulse"></div>
+                <div className="relative w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 rounded-2xl flex items-center justify-center transform hover:rotate-12 transition">
+                  <Baby className="w-7 h-7 text-white" />
+                </div>
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Platforma Grădinițe
+              </span>
+            </div>
+            <div className="hidden md:flex items-center gap-6">
+              <button onClick={() => router.push('/login')} className="px-6 py-2 text-gray-700 hover:text-blue-600 font-semibold transition-all hover:scale-105">
+                Conectare
+              </button>
+              <button onClick={() => router.push('/register')} className="group relative px-8 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white rounded-2xl font-semibold overflow-hidden transition-all hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105">
+                <span className="relative z-10 flex items-center gap-2">
+                  Înregistrare
+                  <Rocket className="w-4 h-4 group-hover:translate-x-1 transition" />
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition"></div>
+              </button>
+            </div>
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2">
+              {mobileMenuOpen ? <X className="w-6 h-6 text-gray-900" /> : <Menu className="w-6 h-6 text-gray-900" />}
+            </button>
           </div>
-          <div className="flex gap-4">
-            <Link
-              href="/login"
-              className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium"
-            >
+        </div>
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-200 py-4 px-6 space-y-4">
+            <button onClick={() => router.push('/login')} className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition">
               Conectare
-            </Link>
-            <Link
-              href="/register"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
-            >
+            </button>
+            <button onClick={() => router.push('/register')} className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold">
               Înregistrare
-            </Link>
+            </button>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section WOW cu Video Background */}
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden min-h-screen flex items-center">
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/hero.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay gradient pentru contrast */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-purple-900/60 to-pink-900/70"></div>
+          {/* Animated blobs peste video */}
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-pink-400/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+        </div>
+        
+        <div className="container mx-auto max-w-6xl text-center relative z-10">
+          {/* Badge animat */}
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-lg rounded-full shadow-2xl mb-8 border border-purple-200 animate-bounce">
+            <Sparkles className="w-5 h-5 text-yellow-500 animate-spin" style={{animationDuration: '3s'}} />
+            <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">✨ Nou în 2025 - AI Powered</span>
+          </div>
+          
+          {/* Titlu cu animație gradient - text alb pentru video background */}
+          <h1 className="text-6xl md:text-8xl font-black mb-8 leading-tight drop-shadow-2xl">
+            <span className="inline-block animate-fade-in-up text-white" style={{animationDelay: '0.1s'}}>
+              Gestionare
+            </span>
+            <br />
+            <span className="inline-block animate-fade-in-up bg-gradient-to-r from-yellow-300 via-pink-300 to-purple-300 bg-clip-text text-transparent" style={{animationDelay: '0.2s'}}>
+              Modernă
+            </span>
+            <br />
+            <span className="inline-block animate-fade-in-up text-white" style={{animationDelay: '0.3s'}}>
+              a Grădinițelor 🏫
+            </span>
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-white mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up drop-shadow-lg" style={{animationDelay: '0.4s'}}>
+            Transformă-ți grădinița cu <span className="font-bold text-yellow-300">AI</span>, 
+            <span className="font-bold text-pink-300"> Portal Părinți</span> și 
+            <span className="font-bold text-purple-300"> Automatizare Completă</span>
+          </p>
+          
+          {/* Butoane Hero */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16 animate-fade-in-up" style={{animationDelay: '0.5s'}}>
+            <button onClick={() => router.push('/register')} className="group relative px-10 py-5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white rounded-2xl font-bold text-lg overflow-hidden transition-all hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-110">
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                <Rocket className="w-6 h-6 group-hover:translate-y-[-4px] transition" />
+                Începe Acum GRATUIT
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition"></div>
+              <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+            </button>
+            
+            <button onClick={() => router.push('/login')} className="group px-10 py-5 bg-white/80 backdrop-blur-lg text-gray-900 rounded-2xl font-bold text-lg hover:shadow-2xl transition-all border-2 border-gray-200 hover:border-purple-400 hover:scale-105">
+              <span className="flex items-center justify-center gap-3">
+                <Play className="w-6 h-6 text-purple-600 group-hover:scale-125 transition" />
+                Vezi Demo
+              </span>
+            </button>
+          </div>
+          
+          {/* Statistici cu background colorat */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in-up" style={{animationDelay: '0.6s'}}>
+            {[
+              { number: '500+', label: 'Grădinițe', gradient: 'from-blue-500 to-cyan-500', icon: '🏫' },
+              { number: '10,000+', label: 'Copii', gradient: 'from-purple-500 to-pink-500', icon: '👶' },
+              { number: '1,000+', label: 'Educatoare', gradient: 'from-orange-500 to-red-500', icon: '👩‍🏫' },
+              { number: '99%', label: 'Satisfacție', gradient: 'from-green-500 to-emerald-500', icon: '⭐' }
+            ].map((stat, i) => (
+              <div key={i} className="group relative">
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-lg rounded-3xl transform group-hover:scale-105 transition"></div>
+                <div className="relative p-6 text-center">
+                  <div className="text-5xl mb-2">{stat.icon}</div>
+                  <div className={`text-5xl font-black bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent mb-2 drop-shadow-lg`}>
+                    {stat.number}
+                  </div>
+                  <div className="text-white font-semibold text-lg drop-shadow-md">{stat.label}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </header>
+      </section>
 
-      {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-gray-900 mb-4">
-            Gestionare Modernă a Grădinițelor
-          </h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Sistem complet pentru management de grădinițe cu funcționalități avansate
-          </p>
-          <Link
-            href="/register"
-            className="inline-block px-8 py-3 bg-gradient-to-r from-blue-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition"
-          >
-            Începe Acum
-          </Link>
+      {/* Features */}
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Funcționalități Complete</h2>
+            <p className="text-xl text-gray-600">Tot ce ai nevoie pentru o grădiniță modernă</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: Users, title: 'Gestionare Copii', desc: 'Administrează date complete', color: 'from-blue-500 to-cyan-500' },
+              { icon: Calendar, title: 'Activități', desc: 'Planifică și urmărește activități', color: 'from-purple-500 to-pink-500' },
+              { icon: FileText, title: 'Rapoarte', desc: 'Generează rapoarte automat', color: 'from-orange-500 to-red-500' },
+              { icon: BarChart3, title: 'Analytics', desc: 'Statistici detaliate', color: 'from-green-500 to-emerald-500' },
+              { icon: Zap, title: 'AI Powered', desc: 'Inteligență artificială', color: 'from-yellow-500 to-orange-500' },
+              { icon: ImageIcon, title: 'Galerie', desc: 'Partajează poze cu părinții', color: 'from-pink-500 to-rose-500' }
+            ].map((f, i) => (
+              <div key={i} className="group p-8 bg-white rounded-2xl border-2 border-gray-100 hover:border-transparent hover:shadow-2xl transition transform hover:-translate-y-2">
+                <div className={`w-16 h-16 bg-gradient-to-br ${f.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition`}>
+                  <f.icon className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">{f.title}</h3>
+                <p className="text-gray-600">{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mt-16">
-          <FeatureCard
-            icon={<Users className="w-8 h-8" />}
-            title="Gestionare Copii"
-            description="Administrează date complete ale copiilor, grupe și contacte de urgență"
-          />
-          <FeatureCard
-            icon={<Calendar className="w-8 h-8" />}
-            title="Planificare Activități"
-            description="Creează și gestionează activități zilnice cu ușurință"
-          />
-          <FeatureCard
-            icon={<FileText className="w-8 h-8" />}
-            title="Scrisori Zilei"
-            description="Generează rapoarte zilnice și scrisori personalizate"
-          />
-          <FeatureCard
-            icon={<BarChart3 className="w-8 h-8" />}
-            title="Analiză & Rapoarte"
-            description="Vizualizează statistici și rapoarte detaliate"
-          />
-          <FeatureCard
-            icon={<Zap className="w-8 h-8" />}
-            title="AI Powered"
-            description="Funcționalități avansate cu inteligență artificială"
-          />
-          <FeatureCard
-            icon={<BookOpen className="w-8 h-8" />}
-            title="Galerie Foto"
-            description="Organizează și partajează fotografii cu părinții"
-          />
+      {/* Benefits */}
+      <section className="py-20 px-6 bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">De ce să alegi platforma noastră?</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              { icon: Shield, title: 'Securitate Maximă', desc: 'Date protejate cu Firebase' },
+              { icon: Clock, title: 'Economisește Timp', desc: 'Câștigă 10+ ore/săptămână' },
+              { icon: Heart, title: 'Portal Părinți', desc: 'Părinții văd activitățile în timp real' },
+              { icon: Bell, title: 'Notificări', desc: 'Alertează părinții automat' }
+            ].map((b, i) => (
+              <div key={i} className="flex gap-6 p-8 bg-white rounded-2xl shadow-lg">
+                <div className="flex-shrink-0">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <b.icon className="w-7 h-7 text-white" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{b.title}</h3>
+                  <p className="text-gray-600">{b.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Ce spun clienții noștri</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { name: 'Maria Popescu', role: 'Director', emoji: '👩‍🏫', text: 'Economisim 15 ore pe săptămână!' },
+              { name: 'Ana Ionescu', role: 'Educatoare', emoji: '👩‍🎓', text: 'Interfața este intuitivă!' },
+              { name: 'Ion Dumitrescu', role: 'Părinte', emoji: '👨‍💼', text: 'Văd în timp real ce face copilul!' }
+            ].map((t, i) => (
+              <div key={i} className="p-8 bg-white rounded-2xl shadow-lg border-2 border-gray-100">
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(5)].map((_, j) => <Star key={j} className="w-5 h-5 fill-yellow-400 text-yellow-400" />)}
+                </div>
+                <p className="text-gray-700 mb-6 italic">"{t.text}"</p>
+                <div className="flex items-center gap-4">
+                  <div className="text-4xl">{t.emoji}</div>
+                  <div>
+                    <div className="font-bold text-gray-900">{t.name}</div>
+                    <div className="text-sm text-gray-600">{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 px-6 bg-gradient-to-br from-purple-50 to-pink-50">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Întrebări Frecvente</h2>
+          </div>
+          <div className="space-y-4">
+            {[
+              { q: 'Ce este Platforma Grădinițe?', a: 'Sistem complet de management pentru grădinițe.' },
+              { q: 'Cât costă?', a: 'Planuri flexibile de la 99 RON/lună.' },
+              { q: 'Este sigură?', a: 'Da! Firebase cu encriptare end-to-end.' },
+              { q: 'Portal părinți?', a: 'Da! Fiecare părinte are acces personalizat.' },
+              { q: 'Suport tehnic?', a: 'Da! Suport 24/7 prin email și telefon.' }
+            ].map((faq, i) => (
+              <div key={i} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition">
+                  <span className="font-bold text-gray-900 text-lg">{faq.q}</span>
+                  <ChevronDown className={`w-6 h-6 text-gray-600 transition ${openFaq === i ? 'rotate-180' : ''}`} />
+                </button>
+                {openFaq === i && <div className="px-6 pb-6 text-gray-600">{faq.a}</div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 text-center text-white">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Gata să începi?</h2>
+            <p className="text-xl mb-8 opacity-90">Alătură-te celor 500+ grădinițe</p>
+            <button onClick={() => router.push('/register')} className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:shadow-2xl transition transform hover:scale-105">
+              Încearcă Gratuit 14 Zile
+            </button>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <p>&copy; 2025 Platforma Grădinițe. Toate drepturile rezervate.</p>
+      <footer className="bg-gray-900 text-white py-12 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center text-gray-400 text-sm">
+            © 2025 Platforma Grădinițe. Toate drepturile rezervate.
+          </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function FeatureCard({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-      <div className="text-blue-600 mb-4">{icon}</div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-600">{description}</p>
     </div>
   );
 }
