@@ -308,7 +308,7 @@ export default function HomePage() {
                     { title: 'Activități', count: '50+ Templates' },
                     { title: 'Prezență', count: 'Real-time' },
                     { title: 'Rapoarte', count: 'Auto-generate' },
-                    { title: 'Galerie Foto', count: 'Unlimited' },
+                    { title: 'Galerie Foto', count: 'Nelimitat' },
                     { title: 'Grupe', count: 'Personalizate' },
                     { title: 'Meniu AI', count: 'Smart' },
                     { title: 'Analytics', count: 'Advanced' }
