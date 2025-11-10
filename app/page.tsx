@@ -16,6 +16,8 @@ export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   const [gradiniteSlide, setGradiniteSlide] = useState(0);
   const [parintiSlide, setParintiSlide] = useState(0);
+  const [serviciiOpen, setServiciiOpen] = useState(false);
+  const [functionalitatiOpen, setFunctionalitatiOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -30,7 +32,7 @@ export default function HomePage() {
         scrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg' : 'bg-white/80 backdrop-blur-lg'
       }`}>
         <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between max-w-7xl mx-auto">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl blur opacity-75 animate-pulse"></div>
@@ -42,10 +44,143 @@ export default function HomePage() {
                 Platforma Grădinițe
               </span>
             </div>
-            <div className="hidden md:flex items-center gap-6">
-              <button onClick={() => router.push('/login')} className="px-6 py-2 text-gray-700 hover:text-blue-600 font-semibold transition-all hover:scale-105">
+            <div className="hidden md:flex items-center gap-8">
+              {/* Acasă */}
+              <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-gray-700 hover:text-purple-600 font-semibold transition">
+                Acasă
+              </button>
+              
+              {/* Despre Noi */}
+              <button onClick={() => router.push('/despre')} className="text-gray-700 hover:text-purple-600 font-semibold transition">
+                Despre Noi
+              </button>
+              
+              {/* Servicii - Dropdown */}
+              <div className="relative group">
+                <button 
+                  onMouseEnter={() => setServiciiOpen(true)}
+                  onMouseLeave={() => setServiciiOpen(false)}
+                  className="flex items-center gap-1 text-gray-700 hover:text-purple-600 font-semibold transition"
+                >
+                  Servicii
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                {serviciiOpen && (
+                  <div 
+                    onMouseEnter={() => setServiciiOpen(true)}
+                    onMouseLeave={() => setServiciiOpen(false)}
+                    className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50"
+                  >
+                    <button onClick={() => router.push('/servicii/gradinite')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700">
+                      Pentru Grădinițe
+                    </button>
+                    <button onClick={() => router.push('/servicii/parinti')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700">
+                      Pentru Părinți
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {/* Funcționalități - Dropdown */}
+              <div className="relative group">
+                <button 
+                  onMouseEnter={() => setFunctionalitatiOpen(true)}
+                  onMouseLeave={() => setFunctionalitatiOpen(false)}
+                  className="flex items-center gap-1 text-gray-700 hover:text-purple-600 font-semibold transition"
+                >
+                  Funcționalități
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                {functionalitatiOpen && (
+                  <div 
+                    onMouseEnter={() => setFunctionalitatiOpen(true)}
+                    onMouseLeave={() => setFunctionalitatiOpen(false)}
+                    className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50 max-h-96 overflow-y-auto"
+                  >
+                    <div className="px-4 py-2 text-xs font-bold text-purple-600 uppercase">Grădinițe</div>
+                    <button onClick={() => router.push('/functionalitati/gestionare-copii')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Gestionare Copii
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/activitati')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Activități
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/prezenta')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Prezență
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/rapoarte')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Rapoarte
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/galerie-foto')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Galerie Foto
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/grupe')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Grupe
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/meniu-ai')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Meniu AI
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/analytics')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Analytics
+                    </button>
+                    
+                    <div className="border-t border-gray-200 my-2"></div>
+                    
+                    <div className="px-4 py-2 text-xs font-bold text-pink-600 uppercase">Părinți</div>
+                    <button onClick={() => router.push('/functionalitati/dashboard-live')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Dashboard Live
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/galerie-foto-parinti')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Galerie Foto
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/rapoarte-zilnice')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Rapoarte Zilnice
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/notificari')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Notificări
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/meniu-saptamanal')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Meniu Săptămânal
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/prezenta-parinti')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Prezență
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/mesaje')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Mesaje
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/progres')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Progres
+                    </button>
+                    
+                    <div className="border-t border-gray-200 my-2"></div>
+                    
+                    <div className="px-4 py-2 text-xs font-bold text-purple-600 uppercase">AI Features</div>
+                    <button onClick={() => router.push('/functionalitati/analiza-contracte')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Analiză Contracte
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/analiza-imagini-medicale')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Analiză Imagini Medicale
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/rapoarte-financiare-ai')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Rapoarte Financiare AI
+                    </button>
+                    <button onClick={() => router.push('/functionalitati/rapoarte-lunare-copii')} className="w-full text-left px-4 py-2 hover:bg-purple-50 transition text-gray-700 text-sm">
+                      Rapoarte Lunare Copii
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {/* Contact */}
+              <button onClick={() => router.push('/contact')} className="text-gray-700 hover:text-purple-600 font-semibold transition">
+                Contact
+              </button>
+              
+              {/* Conectare */}
+              <button onClick={() => router.push('/login')} className="px-6 py-2 text-gray-700 hover:text-purple-600 font-semibold transition">
                 Conectare
               </button>
+              
+              {/* Înregistrare */}
               <button onClick={() => router.push('/register')} className="group relative px-8 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white rounded-2xl font-semibold overflow-hidden transition-all hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105">
                 <span className="relative z-10 flex items-center gap-2">
                   Înregistrare
