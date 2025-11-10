@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { 
   ArrowLeft,
@@ -9,13 +9,14 @@ import {
   Users,
   Calendar,
   Download,
-  Filter
+  Filter,
+  Loader2
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { getOrgAndLocation } from '@/lib/firebase-helpers';
 
-export default function FinancialReportPage() {
+function FinancialReportContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const locationId = searchParams.get('locationId'); // ID grădiniță specifică
@@ -423,5 +424,21 @@ export default function FinancialReportPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+
+export default function FinancialReportPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-16 h-16 animate-spin mx-auto mb-4 text-blue-600" />
+          <p className="text-gray-600">Se încarcă raportul...</p>
+        </div>
+      </div>
+    }>
+      <FinancialReportContent />
+    </Suspense>
   );
 }
