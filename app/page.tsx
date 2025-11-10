@@ -397,18 +397,18 @@ export default function HomePage() {
               {
                 icon: FileSearch,
                 title: 'Analiză Contracte',
-                desc: 'GPT-4o detectează automat câmpurile din contracte PDF',
+                desc: 'Agentul AI detectează automat câmpurile din contracte PDF',
                 features: ['Extragere automată date', 'Detectare câmpuri obligatorii', 'Format JSON structurat'],
                 color: 'from-blue-400 to-cyan-400',
-                badge: 'OpenAI'
+                badge: 'Agentul AI'
               },
               {
                 icon: Stethoscope,
                 title: 'Analiză Imagini Medicale',
-                desc: 'Claude Vision analizează analize medicale și oferă recomandări',
+                desc: 'Agentul AI analizează analize medicale și oferă recomandări',
                 features: ['Detectare valori anormale', 'Recomandări alimentație', 'Plan monitorizare'],
                 color: 'from-green-400 to-emerald-400',
-                badge: 'Claude Vision'
+                badge: 'Agentul AI'
               },
               {
                 icon: BarChart3,
@@ -416,7 +416,7 @@ export default function HomePage() {
                 desc: 'Analizează bilanțuri și calculează indicatori financiari',
                 features: ['Calcul profit net', 'Identificare cheltuieli', 'Insights automate'],
                 color: 'from-orange-400 to-red-400',
-                badge: 'GPT-4o'
+                badge: 'Agentul AI'
               },
               {
                 icon: MessageSquare,
@@ -424,7 +424,7 @@ export default function HomePage() {
                 desc: 'Generează analiză detaliată a dezvoltării copilului',
                 features: ['Analiză prezență & mese', 'Sfaturi pentru părinți', 'Ton prietenos'],
                 color: 'from-pink-400 to-rose-400',
-                badge: 'Claude 3.5'
+                badge: 'Agentul AI'
               }
             ].map((ai, i) => (
               <div key={i} className="group relative">
