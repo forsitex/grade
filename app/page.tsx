@@ -23,6 +23,8 @@ export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   const [gradiniteSlide, setGradiniteSlide] = useState(0);
   const [parintiSlide, setParintiSlide] = useState(0);
+  const [mobileServiciiOpen, setMobileServiciiOpen] = useState(false);
+  const [mobileFunctionalitatiOpen, setMobileFunctionalitatiOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -102,11 +104,85 @@ export default function HomePage() {
           </div>
         </div>
         {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200 py-4 px-6 space-y-4">
-            <button onClick={() => router.push('/login')} className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition">
+          <div className="md:hidden bg-white border-t border-gray-200 py-4 px-6 space-y-2">
+            {/* Acasă */}
+            <button onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setMobileMenuOpen(false); }} className="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition font-semibold">
+              Acasă
+            </button>
+            
+            {/* Despre Noi */}
+            <button onClick={() => { router.push('/despre'); setMobileMenuOpen(false); }} className="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition font-semibold">
+              Despre Noi
+            </button>
+            
+            {/* Servicii */}
+            <div className="space-y-1">
+              <button onClick={() => setMobileServiciiOpen(!mobileServiciiOpen)} className="w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition font-semibold">
+                <span>Servicii</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${mobileServiciiOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {mobileServiciiOpen && (
+                <div className="space-y-1 pl-4">
+                  <button onClick={() => { router.push('/servicii/gradinite'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Pentru Grădinițe
+                  </button>
+                  <button onClick={() => { router.push('/servicii/parinti'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Pentru Părinți
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            {/* Funcționalități */}
+            <div className="space-y-1">
+              <button onClick={() => setMobileFunctionalitatiOpen(!mobileFunctionalitatiOpen)} className="w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition font-semibold">
+                <span>Funcționalități</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${mobileFunctionalitatiOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {mobileFunctionalitatiOpen && (
+                <div className="space-y-1 pl-4">
+                  <button onClick={() => { router.push('/functionalitati/gestionare-copii'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Gestionare Copii
+                  </button>
+                  <button onClick={() => { router.push('/functionalitati/activitati'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Activități
+                  </button>
+                  <button onClick={() => { router.push('/functionalitati/prezenta'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Prezență
+                  </button>
+                  <button onClick={() => { router.push('/functionalitati/rapoarte'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Rapoarte
+                  </button>
+                  <button onClick={() => { router.push('/functionalitati/galerie-foto'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Galerie Foto
+                  </button>
+                  <button onClick={() => { router.push('/functionalitati/grupe'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Grupe
+                  </button>
+                  <button onClick={() => { router.push('/functionalitati/meniu-ai'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Meniu AI
+                  </button>
+                  <button onClick={() => { router.push('/functionalitati/analytics'); setMobileMenuOpen(false); }} className="w-full text-left px-6 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition text-sm">
+                    Analytics
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            {/* Contact */}
+            <button onClick={() => { router.push('/contact'); setMobileMenuOpen(false); }} className="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition font-semibold">
+              Contact
+            </button>
+            
+            <div className="border-t border-gray-200 my-2"></div>
+            
+            {/* Conectare */}
+            <button onClick={() => { router.push('/login'); setMobileMenuOpen(false); }} className="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition font-semibold">
               Conectare
             </button>
-            <button onClick={() => router.push('/register')} className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold">
+            
+            {/* Înregistrare */}
+            <button onClick={() => { router.push('/register'); setMobileMenuOpen(false); }} className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold">
               Înregistrare
             </button>
           </div>
