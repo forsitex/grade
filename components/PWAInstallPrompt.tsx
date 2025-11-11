@@ -57,7 +57,7 @@ export default function PWAInstallPrompt() {
               />
             </div>
             <div>
-              <p className="font-semibold text-base">Instalează aplicația "Grădinița.APP"</p>
+              <p className="font-semibold text-base">Instalează aplicația</p>
             </div>
           </div>
           
