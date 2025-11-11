@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Save, Plus, X } from 'lucide-react';
+import { ArrowLeft, Save, Plus, X, Sparkles } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
+import MenuAnalysisUpload from '@/components/MenuAnalysisUpload';
 
 const ZILE = ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă', 'Duminică'];
 
@@ -30,6 +31,8 @@ export default function AddMenuPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [newPreparat, setNewPreparat] = useState({ nume: '', descriere: '' });
+  const [showAIAnalysis, setShowAIAnalysis] = useState(false);
+  const [aiAnalysisData, setAiAnalysisData] = useState<any>(null);
 
   const [menuData, setMenuData] = useState<any>({
     Luni: {},
@@ -104,6 +107,60 @@ export default function AddMenuPage() {
     });
   };
 
+  const handleSaveAIMenu = async (htmlContent: string, metadata: any) => {
+    try {
+      setSaving(true);
+      const user = auth.currentUser;
+      if (!user) return;
+
+      if (!selectedWeek) {
+        alert('Te rugăm să selectezi săptămâna!');
+        return;
+      }
+
+      // Calculează weekEnd
+      const weekStart = new Date(selectedWeek);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+
+      const weekId = `${weekStart.getFullYear()}-W${getWeekNumber(weekStart)}`;
+
+      const menusRef = collection(db, 'organizations', user.uid, 'locations', gradinitaId, 'menus');
+      
+      await addDoc(menusRef, {
+        weekId,
+        weekStart: weekStart.toISOString().split('T')[0],
+        weekEnd: weekEnd.toISOString().split('T')[0],
+        year: weekStart.getFullYear(),
+        weekNumber: getWeekNumber(weekStart),
+        // Salvare HTML generat de AI
+        aiGenerated: true,
+        htmlContent: htmlContent,
+        numarCopii: metadata?.numarCopii || 20,
+        generatedModel: metadata?.model || 'groq',
+        generatedCost: metadata?.cost || '0',
+        // Păstrare structură veche pentru compatibilitate
+        luni: {},
+        marti: {},
+        miercuri: {},
+        joi: {},
+        vineri: {},
+        sambata: {},
+        duminica: {},
+        createdBy: user.email,
+        createdAt: new Date()
+      });
+
+      alert('✅ Meniu AI salvat cu succes!');
+      router.push(`/gradinite/${gradinitaId}/menus`);
+    } catch (error) {
+      console.error('Eroare salvare:', error);
+      alert('❌ Eroare la salvarea meniului');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleSave = async () => {
     try {
       setSaving(true);
@@ -130,6 +187,7 @@ export default function AddMenuPage() {
         weekEnd: weekEnd.toISOString().split('T')[0],
         year: weekStart.getFullYear(),
         weekNumber: getWeekNumber(weekStart),
+        aiGenerated: false,
         luni: menuData.Luni,
         marti: menuData.Marți,
         miercuri: menuData.Miercuri,
@@ -192,9 +250,68 @@ export default function AddMenuPage() {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl shadow-xl p-8 mb-6 text-white">
-            <h1 className="text-3xl font-bold">🍽️ Adaugă Meniu Săptămânal</h1>
-            <p className="text-white/90">{gradinita?.name}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold">🍽️ Adaugă Meniu Săptămânal</h1>
+                <p className="text-white/90">{gradinita?.name}</p>
+              </div>
+              <button
+                onClick={() => setShowAIAnalysis(!showAIAnalysis)}
+                className="px-6 py-3 bg-white text-orange-600 rounded-lg font-bold hover:bg-orange-50 transition shadow-lg flex items-center gap-2"
+              >
+                <Sparkles className="w-5 h-5" />
+                {showAIAnalysis ? 'Mod Manual' : 'Analiză AI'}
+              </button>
+            </div>
           </div>
+
+          {/* AI Analysis Section */}
+          {showAIAnalysis && (
+            <div className="mb-6">
+              <MenuAnalysisUpload
+                onSaveMenu={handleSaveAIMenu}
+                onAnalysisComplete={(analysis) => {
+                  setAiAnalysisData(analysis);
+                  // Auto-populate menu data from AI analysis
+                  if (analysis.preparate) {
+                    const newMenuData: any = {
+                      Luni: {},
+                      Marți: {},
+                      Miercuri: {},
+                      Joi: {},
+                      Vineri: {},
+                      Sâmbătă: {},
+                      Duminică: {}
+                    };
+
+                    analysis.preparate.forEach((preparat: any) => {
+                      const zi = preparat.zi;
+                      const categorieMap: any = {
+                        'Mic dejun': 'micDejun',
+                        'Gustare de dimineață': 'gustareDimineata',
+                        'Masă de prânz': 'pranz',
+                        'Masă de prânz (felul 2)': 'pranzFel2',
+                        'Gustare': 'gustare',
+                        'Masă de seară': 'seara'
+                      };
+
+                      const categorieId = categorieMap[preparat.categorie];
+                      if (zi && categorieId && newMenuData[zi]) {
+                        newMenuData[zi][categorieId] = {
+                          nume: preparat.nume,
+                          descriere: preparat.ingrediente?.map((i: any) => i.nume).join(', ') || '',
+                          aiData: preparat
+                        };
+                      }
+                    });
+
+                    setMenuData(newMenuData);
+                    alert('✅ Meniul a fost generat automat din analiza AI!');
+                  }
+                }}
+              />
+            </div>
+          )}
 
           {/* Selector Săptămână */}
           <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">

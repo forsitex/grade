@@ -8,6 +8,7 @@ import { collection, getDocs, doc, getDoc, deleteDoc } from 'firebase/firestore'
 import { LogOut, Menu, X } from 'lucide-react';
 import GradinitaDashboard from '@/components/dashboards/GradinitaDashboard';
 import BrandHeader from '@/components/BrandHeader';
+import GroqChatWidget from '@/components/GroqChatWidget';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -114,6 +115,13 @@ export default function DashboardPage() {
           onDelete={handleDeleteLocation}
         />
       </div>
+
+      {/* Groq AI Assistant */}
+      <GroqChatWidget
+        systemPrompt="Ești un asistent AI pentru managerii de grădinițe. Ajuți cu: gestionarea locațiilor, organizarea grupelor, rapoarte, statistici, și orice întrebări despre administrarea grădinițelor. Răspunde în limba română, profesional și util."
+        title="Asistent Manager"
+        placeholder="Întreabă-mă orice despre gestionarea grădiniței..."
+      />
     </div>
   );
 }

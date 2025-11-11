@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import BrandHeader from '@/components/BrandHeader';
+import GroqChatWidget from '@/components/GroqChatWidget';
 
 interface ParinteSesiune {
   email: string;
@@ -374,6 +375,13 @@ export default function DashboardParintePage() {
 
         </div>
       </div>
+
+      {/* Groq AI Assistant */}
+      <GroqChatWidget
+        systemPrompt="Ești un asistent AI pentru părinți. Ajuți cu: informații despre copilul lor, activități, meniu, prezență, rapoarte, sfaturi de creștere, și orice întrebări despre grădiniță. Răspunde în limba română, prietenos și empatic."
+        title="Asistent Părinte"
+        placeholder="Întreabă-mă despre copilul tău..."
+      />
     </div>
   );
 }

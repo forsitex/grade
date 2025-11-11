@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import BrandHeader from '@/components/BrandHeader';
+import GroqChatWidget from '@/components/GroqChatWidget';
 
 interface EducatoareSesiune {
   email: string;
@@ -365,6 +366,13 @@ export default function DashboardEducatoarePage() {
           )}
         </div>
       </div>
+
+      {/* Groq AI Assistant */}
+      <GroqChatWidget
+        systemPrompt="Ești un asistent AI pentru educatoare de grădiniță. Ajuți cu: gestionarea copiilor, activități educaționale, rapoarte zilnice, prezență, sfaturi pedagogice, și orice întrebări despre munca cu copiii. Răspunde în limba română, prietenos și profesional."
+        title="Asistent Educatoare"
+        placeholder="Cum te pot ajuta cu copiii tăi astăzi?"
+      />
     </div>
   );
 }
