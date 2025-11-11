@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Upload, FileText, Loader2, CheckCircle, AlertCircle, Download } from 'lucide-react';
+import { Upload, FileText, Loader2, CheckCircle, AlertCircle, Download, Save } from 'lucide-react';
 
 interface MenuAnalysisUploadProps {
   onAnalysisComplete?: (analysis: any) => void;
@@ -206,7 +206,7 @@ export default function MenuAnalysisUpload({ onAnalysisComplete, onSaveMenu }: M
               ) : (
                 <>
                   <CheckCircle className="w-6 h-6" />
-                  Analizează cu Groq AI
+                  Generează cu AI
                 </>
               )}
             </button>
@@ -284,7 +284,23 @@ export default function MenuAnalysisUpload({ onAnalysisComplete, onSaveMenu }: M
             dangerouslySetInnerHTML={{ __html: analysis.html }}
           />
 
-          {/* Old JSON view - remove this section */}
+          {/* Save Button at Bottom */}
+          {onSaveMenu && (
+            <div className="bg-white rounded-2xl shadow-xl p-6 text-center">
+              <button
+                onClick={() => onSaveMenu(analysis.html, analysis.metadata)}
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold text-lg hover:from-green-700 hover:to-emerald-700 transition shadow-lg flex items-center justify-center gap-3 mx-auto"
+              >
+                <Save className="w-6 h-6" />
+                Salvează Meniu în Săptămână
+              </button>
+              <p className="text-sm text-gray-600 mt-3">
+                Meniul va fi salvat în Firebase și va apărea în dashboard-ul Meniuri Săptămânale
+              </p>
+            </div>
+          )}
+
+          {/* Old sections - removed */}
           {false && analysis.rezumatSaptamanal && (
             <div className="bg-white rounded-2xl shadow-xl p-6">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">📊 Rezumat Săptămânal</h3>
@@ -328,7 +344,8 @@ export default function MenuAnalysisUpload({ onAnalysisComplete, onSaveMenu }: M
             </div>
           )}
 
-          {/* Lista Preparate */}
+          {/* Lista Preparate - REMOVED */}
+          {false && (
           <div className="bg-white rounded-2xl shadow-xl p-6">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">🍽️ Preparate Detaliate</h3>
             <div className="space-y-6">
@@ -437,6 +454,7 @@ export default function MenuAnalysisUpload({ onAnalysisComplete, onSaveMenu }: M
               ))}
             </div>
           </div>
+          )}
         </div>
       )}
     </div>

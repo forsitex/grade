@@ -7,7 +7,7 @@ import { auth, db } from '@/lib/firebase';
 import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
 import MenuAnalysisUpload from '@/components/MenuAnalysisUpload';
 
-const ZILE = ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă', 'Duminică'];
+const ZILE = ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri'];
 
 const CATEGORII = [
   { id: 'micDejun', label: 'Mic dejun' },
@@ -260,7 +260,7 @@ export default function AddMenuPage() {
                 className="px-6 py-3 bg-white text-orange-600 rounded-lg font-bold hover:bg-orange-50 transition shadow-lg flex items-center gap-2"
               >
                 <Sparkles className="w-5 h-5" />
-                {showAIAnalysis ? 'Mod Manual' : 'Analiză AI'}
+                {showAIAnalysis ? 'Mod Manual' : 'Generează cu AI'}
               </button>
             </div>
           </div>
