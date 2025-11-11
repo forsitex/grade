@@ -42,7 +42,7 @@ export default function EditMenuPage() {
       const menuSnap = await getDoc(menuRef);
 
       if (menuSnap.exists()) {
-        const menuData = { id: menuSnap.id, ...menuSnap.data() };
+        const menuData = { id: menuSnap.id, ...menuSnap.data() } as any;
         setMenu(menuData);
         setEditableHtml(menuData.htmlContent || '');
       }
