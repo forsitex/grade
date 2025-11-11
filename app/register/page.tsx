@@ -78,10 +78,6 @@ export default function RegisterPage() {
             <BrandHeader logoSize="full" showTitle={false} />
           </div>
 
-          <h2 className="text-xl font-semibold text-gray-900 mb-6 text-center">
-            Înregistrare
-          </h2>
-
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
               {error}
