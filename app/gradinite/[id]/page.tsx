@@ -19,7 +19,8 @@ import {
   CheckCircle,
   Palette,
   DollarSign,
-  Utensils
+  Utensils,
+  GraduationCap
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, collection, getDocs, updateDoc } from 'firebase/firestore';
@@ -234,11 +235,11 @@ export default function GradinitaDetailsPage() {
           <h2 className="text-2xl font-bold text-white mb-4">Acțiuni Rapide</h2>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <Link
-              href={`/children/add?gradinitaId=${gradinitaId}`}
+              href={`/gradinite/${gradinitaId}/optionale`}
               className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg p-4 transition flex items-center gap-3 text-white"
             >
-              <Baby className="w-6 h-6" />
-              <span className="font-semibold">Adaugă Copil</span>
+              <GraduationCap className="w-6 h-6" />
+              <span className="font-semibold">Opționale</span>
             </Link>
             <Link
               href={`/gradinite/${gradinitaId}/menus`}

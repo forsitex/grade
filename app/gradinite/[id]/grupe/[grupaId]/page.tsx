@@ -16,7 +16,8 @@ import {
   Camera,
   FileBarChart,
   UtensilsCrossed,
-  Mail
+  Mail,
+  GraduationCap
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
@@ -166,7 +167,7 @@ export default function GrupaChildrenPage() {
               ⚡ Acțiuni Rapide Grupă
             </h2>
             
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-7 gap-4">
               <Link
                 href={`/activities/add?gradinitaId=${gradinitaId}&grupaId=${grupaId}`}
                 className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
@@ -213,6 +214,14 @@ export default function GrupaChildrenPage() {
               >
                 <UtensilsCrossed className="w-8 h-8" />
                 <span className="font-semibold text-center">Meniu</span>
+              </Link>
+              
+              <Link
+                href={`/gradinite/${gradinitaId}/optionale`}
+                className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-pink-500 to-rose-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+              >
+                <GraduationCap className="w-8 h-8" />
+                <span className="font-semibold text-center">Opționale</span>
               </Link>
             </div>
           </div>
