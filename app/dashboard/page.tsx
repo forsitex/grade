@@ -7,6 +7,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, getDocs, doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { LogOut, Menu, X } from 'lucide-react';
 import GradinitaDashboard from '@/components/dashboards/GradinitaDashboard';
+import BrandHeader from '@/components/BrandHeader';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -86,19 +87,20 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50">
       {/* Header */}
       <div className="bg-white shadow">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-gray-900">🎨 Platforma Grădinițe</h1>
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
+            <div className="w-32 sm:w-56 flex-shrink-0">
+              <BrandHeader logoSize="xl" showTitle={false} />
             </div>
-            <div className="flex items-center gap-4">
-              <span className="text-gray-600">{user?.email}</span>
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+              <span className="text-gray-600 text-sm sm:text-base truncate">{user?.email}</span>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm sm:text-base whitespace-nowrap"
               >
                 <LogOut className="w-4 h-4" />
-                Deconectare
+                <span className="hidden sm:inline">Deconectare</span>
+                <span className="sm:hidden">Ieși</span>
               </button>
             </div>
           </div>

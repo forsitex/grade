@@ -20,6 +20,7 @@ import {
   Mail
 } from 'lucide-react';
 import Link from 'next/link';
+import BrandHeader from '@/components/BrandHeader';
 
 interface EducatoareSesiune {
   email: string;
@@ -164,21 +165,22 @@ export default function DashboardEducatoarePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50">
       {/* Header */}
       <div className="bg-white shadow">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                👩‍🏫 Dashboard Educatoare
-              </h1>
-              <p className="text-sm text-gray-600">{educatoare.email}</p>
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
+            <div className="w-32 sm:w-56 flex-shrink-0">
+              <BrandHeader logoSize="xl" showTitle={false} />
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
-            >
-              <LogOut className="w-4 h-4" />
-              Ieșire
-            </button>
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+              <span className="text-gray-600 text-sm sm:text-base truncate">{educatoare.email}</span>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm sm:text-base whitespace-nowrap"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">Ieșire</span>
+                <span className="sm:hidden">Ieș</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

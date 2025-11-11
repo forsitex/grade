@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { BookOpen } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
+import BrandHeader from '@/components/BrandHeader';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -61,14 +61,9 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-pink-50 to-purple-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <BookOpen className="w-8 h-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Platforma Grădinițe</h1>
+          <div className="mb-8">
+            <BrandHeader logoSize="full" showTitle={false} />
           </div>
-
-          <h2 className="text-xl font-semibold text-gray-900 mb-6 text-center">
-            Conectare
-          </h2>
 
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
