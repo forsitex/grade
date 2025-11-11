@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -48,6 +49,7 @@ export default function RootLayout({
       </head>
       <body className="bg-gradient-to-br from-blue-50 to-pink-50">
         {children}
+        <PWAInstallPrompt />
       </body>
     </html>
   );
