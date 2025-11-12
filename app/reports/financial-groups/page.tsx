@@ -8,7 +8,6 @@ import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { 
   ArrowLeft, 
   Users, 
-  DollarSign,
   TrendingUp,
   Calendar,
   GraduationCap
@@ -30,24 +29,9 @@ export default function FinancialGroupsPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [grupe, setGrupe] = useState<Grupa[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState('');
-  const [selectedYear, setSelectedYear] = useState('');
-  const [totalVenit, setTotalVenit] = useState(0);
-  const [totalVenitOptionale, setTotalVenitOptionale] = useState(0);
-  const [totalVenitTaxe, setTotalVenitTaxe] = useState(0);
-
   useEffect(() => {
-    // Setează luna și anul curent
-    const now = new Date();
-    setSelectedMonth(String(now.getMonth() + 1).padStart(2, '0'));
-    setSelectedYear(String(now.getFullYear()));
+    loadGrupeData();
   }, []);
-
-  useEffect(() => {
-    if (selectedMonth && selectedYear) {
-      loadGrupeData();
-    }
-  }, [selectedMonth, selectedYear]);
 
   const loadGrupeData = async () => {
     try {
@@ -132,11 +116,6 @@ export default function FinancialGroupsPage() {
       }
 
       setGrupe(allGrupe);
-      const totalOptionale = allGrupe.reduce((sum, g) => sum + g.totalVenitOptionale, 0);
-      const totalTaxe = allGrupe.reduce((sum, g) => sum + g.totalVenitTaxe, 0);
-      setTotalVenitOptionale(totalOptionale);
-      setTotalVenitTaxe(totalTaxe);
-      setTotalVenit(totalOptionale + totalTaxe);
     } catch (error) {
       console.error('Eroare încărcare grupe:', error);
     } finally {
@@ -144,22 +123,6 @@ export default function FinancialGroupsPage() {
     }
   };
 
-  const months = [
-    { value: '01', label: 'Ianuarie' },
-    { value: '02', label: 'Februarie' },
-    { value: '03', label: 'Martie' },
-    { value: '04', label: 'Aprilie' },
-    { value: '05', label: 'Mai' },
-    { value: '06', label: 'Iunie' },
-    { value: '07', label: 'Iulie' },
-    { value: '08', label: 'August' },
-    { value: '09', label: 'Septembrie' },
-    { value: '10', label: 'Octombrie' },
-    { value: '11', label: 'Noiembrie' },
-    { value: '12', label: 'Decembrie' }
-  ];
-
-  const years = [2024, 2025, 2026];
 
   if (loading) {
     return (
@@ -195,83 +158,6 @@ export default function FinancialGroupsPage() {
           <p className="text-white/90 text-lg drop-shadow-md">Încasări din opționale per grupă</p>
         </div>
 
-        {/* Selector Dată */}
-        <div className="bg-white rounded-2xl shadow-xl p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            📅 Selectează Perioada
-          </h2>
-          <div className="flex gap-4 items-end">
-            <div className="flex-1">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Luna</label>
-              <select
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
-              >
-                {months.map(m => (
-                  <option key={m.value} value={m.value}>{m.label}</option>
-                ))}
-              </select>
-            </div>
-            <div className="flex-1">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Anul</label>
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
-              >
-                {years.map(y => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
-              </select>
-            </div>
-            <button
-              onClick={loadGrupeData}
-              className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-pink-700 transition shadow-lg"
-            >
-              Aplică
-            </button>
-          </div>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-6 shadow-[0_8px_0_rgb(37,99,235),0_13px_25px_rgba(37,99,235,0.4)] border-2 border-blue-400">
-            <div className="flex items-center justify-between mb-3">
-              <Users className="w-10 h-10 text-white" />
-              <span className="text-3xl font-bold text-white">{grupe.length}</span>
-            </div>
-            <h3 className="text-blue-100 text-xs font-semibold mb-1">Total Grupe</h3>
-            <p className="text-sm text-blue-50">Active</p>
-          </div>
-
-          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-6 shadow-[0_8px_0_rgb(22,163,74),0_13px_25px_rgba(22,163,74,0.4)] border-2 border-green-400">
-            <div className="flex items-center justify-between mb-3">
-              <DollarSign className="w-10 h-10 text-white" />
-              <span className="text-3xl font-bold text-white">{totalVenitOptionale.toLocaleString()}</span>
-            </div>
-            <h3 className="text-green-100 text-xs font-semibold mb-1">Venit din Opționale</h3>
-            <p className="text-sm text-green-50">Lei doar opționale</p>
-          </div>
-
-          <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-6 shadow-[0_8px_0_rgb(234,88,12),0_13px_25px_rgba(234,88,12,0.4)] border-2 border-orange-400">
-            <div className="flex items-center justify-between mb-3">
-              <DollarSign className="w-10 h-10 text-white" />
-              <span className="text-3xl font-bold text-white">{totalVenitTaxe.toLocaleString()}</span>
-            </div>
-            <h3 className="text-orange-100 text-xs font-semibold mb-1">Venit din Taxe</h3>
-            <p className="text-sm text-orange-50">Lei taxe lunare</p>
-          </div>
-
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-6 shadow-[0_8px_0_rgb(147,51,234),0_13px_25px_rgba(147,51,234,0.4)] border-2 border-purple-400">
-            <div className="flex items-center justify-between mb-3">
-              <TrendingUp className="w-10 h-10 text-white" />
-              <span className="text-3xl font-bold text-white">{totalVenit.toLocaleString()}</span>
-            </div>
-            <h3 className="text-purple-100 text-xs font-semibold mb-1">Total General</h3>
-            <p className="text-sm text-purple-50">Taxe + Opționale</p>
-          </div>
-        </div>
 
         {/* Carduri Grupe */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -289,7 +175,7 @@ export default function FinancialGroupsPage() {
             return (
               <Link
                 key={grupa.id}
-                href={`/reports/financial-groups/${grupa.id}?month=${selectedMonth}&year=${selectedYear}`}
+                href={`/reports/financial-groups/${grupa.id}`}
                 className="group relative"
               >
                 <div className={`bg-gradient-to-br ${gradient} rounded-3xl p-6 shadow-[0_8px_0_rgba(0,0,0,0.2),0_12px_24px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_0_rgba(0,0,0,0.3),0_8px_20px_rgba(0,0,0,0.2)] hover:translate-y-1 transition-all duration-200 border-2 border-white/30`}>
@@ -315,7 +201,7 @@ export default function FinancialGroupsPage() {
 
                   <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border-2 border-white/30">
                     <p className="text-xs text-white/80 font-semibold mb-1">VENIT TOTAL</p>
-                    <p className="text-3xl font-bold text-white">{grupa.totalVenit.toLocaleString()} lei</p>
+                    <p className="text-3xl font-bold text-white">{grupa.totalVenit.toLocaleString()} RON</p>
                   </div>
 
                   <div className="mt-4 text-center">
@@ -332,17 +218,6 @@ export default function FinancialGroupsPage() {
         {grupe.length === 0 && (
           <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
             <p className="text-gray-500 text-lg">Nu există grupe create încă.</p>
-          </div>
-        )}
-
-        {/* Total General */}
-        {grupe.length > 0 && (
-          <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl shadow-xl p-8 text-white text-center">
-            <p className="text-xl font-semibold mb-2">💰 TOTAL GENERAL</p>
-            <p className="text-5xl font-bold">{totalVenit.toLocaleString()} lei</p>
-            <p className="text-white/90 mt-2">
-              {months.find(m => m.value === selectedMonth)?.label} {selectedYear}
-            </p>
           </div>
         )}
       </div>

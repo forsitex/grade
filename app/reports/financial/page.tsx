@@ -4,12 +4,13 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { 
   ArrowLeft,
-  DollarSign,
   TrendingUp,
   Users,
   Calendar,
-  Download,
+  CheckCircle,
+  XCircle,
   Filter,
+  Download,
   Loader2
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
@@ -295,12 +296,12 @@ function FinancialReportContent() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-6 text-white">
-                <DollarSign className="w-8 h-8 mb-2 opacity-80" />
+                <div className="text-4xl font-bold mb-2 opacity-80">RON</div>
                 <p className="text-3xl font-bold">{stats.totalIncasari.toLocaleString()} RON</p>
                 <p className="text-sm text-white/80 mt-1">Total Încasări</p>
               </div>
               <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-6 text-white">
-                <DollarSign className="w-8 h-8 mb-2 opacity-80" />
+                <div className="text-4xl font-bold mb-2 opacity-80">RON</div>
                 <p className="text-3xl font-bold">{stats.totalMensualizari.toLocaleString()} RON</p>
                 <p className="text-sm text-white/80 mt-1">Mensualizări</p>
                 <p className="text-xs text-white/60 mt-1">
@@ -308,7 +309,7 @@ function FinancialReportContent() {
                 </p>
               </div>
               <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6 text-white">
-                <DollarSign className="w-8 h-8 mb-2 opacity-80" />
+                <div className="text-4xl font-bold mb-2 opacity-80">RON</div>
                 <p className="text-3xl font-bold">{stats.totalOptionale.toLocaleString()} RON</p>
                 <p className="text-sm text-white/80 mt-1">Opționale</p>
                 <p className="text-xs text-white/60 mt-1">
