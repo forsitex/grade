@@ -13,7 +13,8 @@ import {
   FileText,
   Calendar,
   UtensilsCrossed,
-  Activity
+  Activity,
+  MessageCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import BrandHeader from '@/components/BrandHeader';
@@ -49,6 +50,7 @@ export default function DashboardParintePage() {
     raportDisponibil: false,
     activitatiSaptamana: 0
   });
+  const [unreadMessages, setUnreadMessages] = useState(0);
 
   useEffect(() => {
     verificaAutentificare();
@@ -106,6 +108,7 @@ export default function DashboardParintePage() {
 
       // Calculează statistici
       await calculateStats(parinteData);
+      await incarcaMesajeNecitite(parinteData);
 
     } catch (error) {
       console.error('Eroare verificare autentificare:', error);
@@ -185,6 +188,34 @@ export default function DashboardParintePage() {
       });
     } catch (error) {
       console.error('Eroare calcul statistici:', error);
+    }
+  };
+
+  const incarcaMesajeNecitite = async (parinteData: any) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const messagesRef = collection(
+        db,
+        'organizations',
+        parinteData.organizationId,
+        'locations',
+        parinteData.locationId,
+        'messages'
+      );
+      
+      const messagesSnap = await getDocs(messagesRef);
+      
+      const unread = messagesSnap.docs.filter(doc => {
+        const data = doc.data();
+        return data.to === user.uid && !data.read;
+      }).length;
+
+      setUnreadMessages(unread);
+
+    } catch (error) {
+      console.error('Eroare încărcare mesaje necitite:', error);
     }
   };
 
@@ -359,6 +390,20 @@ export default function DashboardParintePage() {
               <Calendar className="w-12 h-12 text-indigo-500 mb-4 group-hover:scale-110 transition" />
               <h3 className="text-lg font-bold text-gray-900 mb-2">Calendar</h3>
               <p className="text-sm text-gray-600">Evenimente și activități</p>
+            </Link>
+
+            <Link
+              href="/dashboard-parinte/mesaje"
+              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition group relative"
+            >
+              {unreadMessages > 0 && (
+                <span className="absolute top-4 right-4 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                  {unreadMessages}
+                </span>
+              )}
+              <MessageCircle className="w-12 h-12 text-blue-500 mb-4 group-hover:scale-110 transition" />
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Mesaje</h3>
+              <p className="text-sm text-gray-600">Comunică cu educatoarea</p>
             </Link>
           </div>
 

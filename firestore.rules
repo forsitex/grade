@@ -142,6 +142,52 @@ service cloud.firestore {
                        exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
                        get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId;
       }
+      
+      // ========================================
+      // 4. MESAGERIE (Educatoare ↔ Părinți)
+      // ========================================
+      match /messages/{messageId} {
+        // Manager poate citi/scrie toate mesajele
+        allow read, write: if request.auth != null && request.auth.uid == orgId;
+        
+        // Educatoarea poate:
+        // - Citi mesajele unde ea este expeditor SAU destinatar
+        // - Crea mesaje noi (trimite mesaje)
+        // - Actualiza mesajele (marcare citit)
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId &&
+                       (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+        
+        allow create: if request.auth != null && 
+                         exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
+                         get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId &&
+                         request.resource.data.from == request.auth.uid;
+        
+        allow update: if request.auth != null && 
+                         exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
+                         get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId &&
+                         (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+        
+        // Părintele poate:
+        // - Citi mesajele unde el este expeditor SAU destinatar
+        // - Crea mesaje noi (trimite mesaje)
+        // - Actualiza mesajele (marcare citit)
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId &&
+                       (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+        
+        allow create: if request.auth != null && 
+                         exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                         get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId &&
+                         request.resource.data.from == request.auth.uid;
+        
+        allow update: if request.auth != null && 
+                         exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                         get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId &&
+                         (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+      }
     }
     
     // ========================================

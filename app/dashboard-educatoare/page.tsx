@@ -18,7 +18,8 @@ import {
   FileBarChart,
   UtensilsCrossed,
   Mail,
-  GraduationCap
+  GraduationCap,
+  MessageCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import BrandHeader from '@/components/BrandHeader';
@@ -57,6 +58,7 @@ export default function DashboardEducatoarePage() {
   const [loading, setLoading] = useState(true);
   const [educatoare, setEducatoare] = useState<EducatoareSesiune | null>(null);
   const [copii, setCopii] = useState<Child[]>([]);
+  const [unreadMessages, setUnreadMessages] = useState(0);
 
   useEffect(() => {
     verificaAutentificare();
@@ -103,6 +105,7 @@ export default function DashboardEducatoarePage() {
           
           setEducatoare(educatoareSesiune);
           await incarcaCopii(educatoareSesiune);
+          await incarcaMesajeNecitite(educatoareSesiune);
         }
       }
 
@@ -136,6 +139,34 @@ export default function DashboardEducatoarePage() {
 
     } catch (error) {
       console.error('Eroare încărcare copii:', error);
+    }
+  };
+
+  const incarcaMesajeNecitite = async (educatoarData: EducatoareSesiune) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const messagesRef = collection(
+        db,
+        'organizations',
+        educatoarData.organizationId,
+        'locations',
+        educatoarData.locationId,
+        'messages'
+      );
+      
+      const messagesSnap = await getDocs(messagesRef);
+      
+      const unread = messagesSnap.docs.filter(doc => {
+        const data = doc.data();
+        return data.to === user.uid && !data.read;
+      }).length;
+
+      setUnreadMessages(unread);
+
+    } catch (error) {
+      console.error('Eroare încărcare mesaje necitite:', error);
     }
   };
 
@@ -227,61 +258,74 @@ export default function DashboardEducatoarePage() {
               ⚡ Acțiuni Rapide Grupă
             </h2>
             
-            <div className="grid grid-cols-2 md:grid-cols-7 gap-4">
+            <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
               <Link
                 href="/activities"
-                className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
               >
-                <Palette className="w-8 h-8" />
-                <span className="font-semibold text-center">Activități</span>
+                <Palette className="w-6 h-6" />
+                <span className="font-semibold text-center text-sm">Activități</span>
               </Link>
               
               <Link
                 href={`/attendance/group/${educatoare.grupa.id}`}
-                className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
               >
-                <ClipboardCheck className="w-8 h-8" />
-                <span className="font-semibold text-center">Prezență</span>
+                <ClipboardCheck className="w-6 h-6" />
+                <span className="font-semibold text-center text-sm">Prezență</span>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/grupe/${educatoare.grupa.id}/gallery`}
-                className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
               >
-                <Camera className="w-8 h-8" />
-                <span className="font-semibold text-center">Galerie</span>
+                <Camera className="w-6 h-6" />
+                <span className="font-semibold text-center text-sm">Galerie</span>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/grupe/${educatoare.grupa.id}/reports`}
-                className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
               >
-                <FileBarChart className="w-8 h-8" />
-                <span className="font-semibold text-center">Rapoarte</span>
+                <FileBarChart className="w-6 h-6" />
+                <span className="font-semibold text-center text-sm">Rapoarte</span>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/grupe/${educatoare.grupa.id}/letters`}
-                className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-indigo-500 to-purple-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-indigo-500 to-purple-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
               >
-                <Mail className="w-8 h-8" />
-                <span className="font-semibold text-center">Scrisori</span>
+                <Mail className="w-6 h-6" />
+                <span className="font-semibold text-center text-sm">Scrisori</span>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/menus`}
-                className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-yellow-500 to-orange-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-yellow-500 to-orange-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
               >
-                <UtensilsCrossed className="w-8 h-8" />
-                <span className="font-semibold text-center">Meniu</span>
+                <UtensilsCrossed className="w-6 h-6" />
+                <span className="font-semibold text-center text-sm">Meniu</span>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/optionale`}
-                className="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-pink-500 to-rose-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-pink-500 to-rose-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
               >
-                <GraduationCap className="w-8 h-8" />
-                <span className="font-semibold text-center">Opționale</span>
+                <GraduationCap className="w-6 h-6" />
+                <span className="font-semibold text-center text-sm">Opționale</span>
+              </Link>
+              
+              <Link
+                href="/dashboard-educatoare/mesaje"
+                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition shadow-lg relative"
+              >
+                {unreadMessages > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                    {unreadMessages}
+                  </span>
+                )}
+                <MessageCircle className="w-6 h-6" />
+                <span className="font-semibold text-center text-sm">Mesaje</span>
               </Link>
             </div>
           </div>
