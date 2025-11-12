@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Building, Baby, Palette, Calendar, Users, Plus, TrendingUp, Activity, Utensils, DollarSign } from 'lucide-react';
+import { Building, Baby, Palette, Calendar, Users, Plus, TrendingUp, Activity, Utensils, DollarSign, BarChart3, MessageCircle } from 'lucide-react';
 import { getLocationDetailsUrl, getAddLocationUrl, getAddPersonUrl, getAddPersonLabel } from '@/lib/location-helpers';
 
 interface GradinitaDashboardProps {
@@ -10,6 +10,7 @@ interface GradinitaDashboardProps {
 export default function GradinitaDashboard({ locations, onDelete }: GradinitaDashboardProps) {
   const totalLocations = locations.length;
   const totalCapacity = locations.reduce((sum, loc) => sum + (loc.capacity || 0), 0);
+  const totalChildren = locations.reduce((sum, loc) => sum + (loc.childrenCount || 0), 0);
   
   return (
     <div className="space-y-6">
@@ -36,10 +37,10 @@ export default function GradinitaDashboard({ locations, onDelete }: GradinitaDas
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(22,163,74),0_13px_25px_rgba(22,163,74,0.4)] hover:shadow-[0_4px_0_rgb(22,163,74),0_8px_20px_rgba(22,163,74,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-green-400">
           <div className="flex items-center justify-between mb-3">
             <Activity className="w-10 h-10 text-white" />
-            <span className="text-3xl font-bold text-white">0</span>
+            <span className="text-3xl font-bold text-white">{totalChildren}</span>
           </div>
           <h3 className="text-green-100 text-xs font-semibold mb-1">Copii Înscriși</h3>
-          <p className="text-sm text-green-50">Soon</p>
+          <p className="text-sm text-green-50">Total din toate grădinițele</p>
         </div>
 
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(147,51,234),0_13px_25px_rgba(147,51,234,0.4)] hover:shadow-[0_4px_0_rgb(147,51,234),0_8px_20px_rgba(147,51,234,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-400">
@@ -76,7 +77,29 @@ export default function GradinitaDashboard({ locations, onDelete }: GradinitaDas
             <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(22,163,74),0_10px_20px_rgba(22,163,74,0.4)] hover:shadow-[0_3px_0_rgb(22,163,74),0_6px_15px_rgba(22,163,74,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-green-400">
               <div className="flex flex-col items-center gap-2">
                 <DollarSign className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
-                <span className="text-sm font-bold text-white text-center">Raport Financiar</span>
+                <span className="text-sm font-bold text-white text-center">Raport Financiar TOTAL</span>
+              </div>
+            </div>
+          </Link>
+          <Link
+            href="/reports/financial-groups"
+            className="group relative"
+          >
+            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(147,51,234),0_10px_20px_rgba(147,51,234,0.4)] hover:shadow-[0_3px_0_rgb(147,51,234),0_6px_15px_rgba(147,51,234,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-400">
+              <div className="flex flex-col items-center gap-2">
+                <BarChart3 className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                <span className="text-sm font-bold text-white text-center">Raport Financiar GRUPE</span>
+              </div>
+            </div>
+          </Link>
+          <Link
+            href="/dashboard/mesaje"
+            className="group relative"
+          >
+            <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(79,70,229),0_10px_20px_rgba(79,70,229,0.4)] hover:shadow-[0_3px_0_rgb(79,70,229),0_6px_15px_rgba(79,70,229,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-indigo-400">
+              <div className="flex flex-col items-center gap-2">
+                <MessageCircle className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                <span className="text-sm font-bold text-white text-center">Mesaje</span>
               </div>
             </div>
           </Link>
@@ -85,54 +108,56 @@ export default function GradinitaDashboard({ locations, onDelete }: GradinitaDas
 
       {/* Lista Grădinițe */}
       <div>
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Grădinițele Tale</h2>
-          <Link
-            href={getAddLocationUrl('gradinita')}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-lg"
-          >
-            <Plus className="w-5 h-5" />
-            Adaugă Grădiniță
-          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {locations.map((location, index) => (
             <div 
               key={`location-${location.id}-${index}`} 
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 border border-gray-100"
+              className="bg-gradient-to-br from-blue-50 via-white to-pink-50 rounded-3xl p-6 shadow-[0_8px_0_rgba(59,130,246,0.3),0_12px_24px_rgba(59,130,246,0.2)] hover:shadow-[0_4px_0_rgba(59,130,246,0.4),0_8px_20px_rgba(59,130,246,0.3)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-200"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Building className="w-6 h-6 text-blue-600" />
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Building className="w-7 h-7 text-white" />
                 </div>
-                <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                  Activ
+                <span className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold rounded-full shadow-md">
+                  ✓ Activ
                 </span>
               </div>
               
               <h3 className="text-xl font-bold text-gray-900 mb-2">{location.name}</h3>
-              <p className="text-gray-600 text-sm mb-1">{location.address}</p>
-              <div className="space-y-1 mb-4">
-                <p className="text-gray-500 text-xs">👶 Capacitate: {location.capacity || 0} copii</p>
-                {location.numarGrupe && (
-                  <p className="text-gray-500 text-xs">🎨 Grupe: {location.numarGrupe}</p>
+              <p className="text-gray-600 text-sm mb-3 font-medium">{location.address}</p>
+              <div className="space-y-2 mb-5 bg-white/60 backdrop-blur-sm rounded-xl p-3 border border-blue-100">
+                <p className="text-gray-700 text-sm font-semibold flex items-center gap-2">
+                  <span className="text-lg">👶</span> Capacitate: <span className="text-blue-600">{location.capacity || 0} copii</span>
+                </p>
+                <p className="text-gray-700 text-sm font-semibold flex items-center gap-2">
+                  <span className="text-lg">✅</span> Înscriși: <span className="text-green-600">{location.childrenCount || 0} copii</span>
+                </p>
+                {location.numarGrupe > 0 && (
+                  <p className="text-gray-700 text-sm font-semibold flex items-center gap-2">
+                    <span className="text-lg">🎨</span> Grupe: <span className="text-purple-600">{location.numarGrupe}</span>
+                  </p>
                 )}
                 {location.program && (
-                  <p className="text-gray-500 text-xs">🕐 Program: {location.program}</p>
+                  <p className="text-gray-700 text-sm font-semibold flex items-center gap-2">
+                    <span className="text-lg">🕐</span> Program: <span className="text-pink-600">{location.program}</span>
+                  </p>
                 )}
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Link
                   href={getLocationDetailsUrl('gradinita', location.id)}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-semibold hover:bg-blue-700 transition"
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl text-center font-bold hover:from-blue-700 hover:to-blue-800 transition shadow-lg hover:shadow-xl"
                 >
-                  Vezi detalii
+                  👁️ Vezi detalii
                 </Link>
                 <button
                   onClick={() => onDelete(location.id, location.name)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition"
+                  className="px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-bold hover:from-red-600 hover:to-red-700 transition shadow-lg hover:shadow-xl"
                   title="Șterge grădiniță"
                 >
                   ✕

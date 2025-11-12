@@ -31,10 +31,23 @@ export default function DashboardPage() {
         const locationsRef = collection(db, 'organizations', currentUser.uid, 'locations');
         const locationsSnap = await getDocs(locationsRef);
         
-        const locationsData = locationsSnap.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as any[];
+        // Încarcă locațiile cu numărul de copii
+        const locationsData = await Promise.all(
+          locationsSnap.docs.map(async (locationDoc) => {
+            const locationId = locationDoc.id;
+            
+            // Numără copiii din această locație
+            const childrenRef = collection(db, 'organizations', currentUser.uid, 'locations', locationId, 'children');
+            const childrenSnap = await getDocs(childrenRef);
+            const childrenCount = childrenSnap.size;
+            
+            return {
+              id: locationId,
+              ...locationDoc.data(),
+              childrenCount
+            };
+          })
+        );
 
         setLocations(locationsData);
       } catch (error) {

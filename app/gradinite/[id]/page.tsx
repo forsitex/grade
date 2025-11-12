@@ -193,81 +193,119 @@ export default function GradinitaDetailsPage() {
 
       {/* Content */}
       <div className="container mx-auto px-4 sm:px-6 py-8 space-y-6">
-        {/* Header Grădiniță */}
-        <div className="bg-gradient-to-r from-blue-500 to-pink-500 rounded-2xl shadow-xl p-8 text-white">
+        {/* Header Grădiniță - 3D Gradient */}
+        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-[0_10px_0_rgba(59,130,246,0.3),0_15px_30px_rgba(59,130,246,0.3)] p-8 text-white border-4 border-white/20">
           <div className="flex items-start gap-6">
-            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0">
-              <Building className="w-10 h-10" />
+            <div className="w-24 h-24 bg-white/30 backdrop-blur-md rounded-3xl flex items-center justify-center flex-shrink-0 shadow-lg border-2 border-white/40">
+              <Building className="w-12 h-12" />
             </div>
             <div className="flex-1">
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">{gradinita.name}</h1>
-              <p className="text-white/90 text-lg">{gradinita.address}</p>
+              <h1 className="text-4xl md:text-5xl font-bold mb-3 drop-shadow-lg">{gradinita.name}</h1>
+              <p className="text-white/95 text-xl font-medium drop-shadow-md">📍 {gradinita.address}</p>
             </div>
           </div>
 
-          {/* Info Cards */}
+          {/* Info Cards - 3D Style */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-              <Phone className="w-5 h-5 mb-2" />
-              <p className="text-sm text-white/80">TELEFON</p>
-              <p className="font-semibold">{gradinita.phone}</p>
+            <div className="bg-white/30 backdrop-blur-md rounded-2xl p-5 shadow-[0_4px_0_rgba(255,255,255,0.3)] hover:shadow-[0_2px_0_rgba(255,255,255,0.4)] hover:translate-y-0.5 transition-all duration-200 border-2 border-white/40">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-white/40 rounded-xl flex items-center justify-center">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <p className="text-xs font-bold text-white/90 uppercase tracking-wide">Telefon</p>
+              </div>
+              <p className="font-bold text-lg">{gradinita.phone}</p>
             </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-              <Mail className="w-5 h-5 mb-2" />
-              <p className="text-sm text-white/80">EMAIL</p>
-              <p className="font-semibold text-sm">{gradinita.email}</p>
+            <div className="bg-white/30 backdrop-blur-md rounded-2xl p-5 shadow-[0_4px_0_rgba(255,255,255,0.3)] hover:shadow-[0_2px_0_rgba(255,255,255,0.4)] hover:translate-y-0.5 transition-all duration-200 border-2 border-white/40">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-white/40 rounded-xl flex items-center justify-center">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <p className="text-xs font-bold text-white/90 uppercase tracking-wide">Email</p>
+              </div>
+              <p className="font-bold text-sm break-all">{gradinita.email}</p>
             </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-              <Users className="w-5 h-5 mb-2" />
-              <p className="text-sm text-white/80">CAPACITATE</p>
-              <p className="font-semibold">{gradinita.capacity} copii</p>
+            <div className="bg-white/30 backdrop-blur-md rounded-2xl p-5 shadow-[0_4px_0_rgba(255,255,255,0.3)] hover:shadow-[0_2px_0_rgba(255,255,255,0.4)] hover:translate-y-0.5 transition-all duration-200 border-2 border-white/40">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-white/40 rounded-xl flex items-center justify-center">
+                  <Users className="w-5 h-5" />
+                </div>
+                <p className="text-xs font-bold text-white/90 uppercase tracking-wide">Capacitate</p>
+              </div>
+              <p className="font-bold text-lg">{gradinita.capacity} copii</p>
             </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-              <Baby className="w-5 h-5 mb-2" />
-              <p className="text-sm text-white/80">GRUPE</p>
-              <p className="font-semibold">{gradinita.grupe?.length || 0} grupe</p>
+            <div className="bg-white/30 backdrop-blur-md rounded-2xl p-5 shadow-[0_4px_0_rgba(255,255,255,0.3)] hover:shadow-[0_2px_0_rgba(255,255,255,0.4)] hover:translate-y-0.5 transition-all duration-200 border-2 border-white/40">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-white/40 rounded-xl flex items-center justify-center">
+                  <Baby className="w-5 h-5" />
+                </div>
+                <p className="text-xs font-bold text-white/90 uppercase tracking-wide">Grupe</p>
+              </div>
+              <p className="font-bold text-lg">{gradinita.grupe?.length || 0} grupe</p>
             </div>
           </div>
         </div>
 
-        {/* Acțiuni Rapide */}
-        <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-2xl shadow-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">Acțiuni Rapide</h2>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        {/* Acțiuni Rapide - 3D Buttons */}
+        <div className="bg-white rounded-2xl shadow-xl p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            ⚡ Acțiuni Rapide
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Link
               href={`/gradinite/${gradinitaId}/optionale`}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg p-4 transition flex items-center gap-3 text-white"
+              className="group relative"
             >
-              <GraduationCap className="w-6 h-6" />
-              <span className="font-semibold">Opționale</span>
+              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(147,51,234),0_10px_20px_rgba(147,51,234,0.4)] hover:shadow-[0_3px_0_rgb(147,51,234),0_6px_15px_rgba(147,51,234,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-400">
+                <div className="flex flex-col items-center gap-2">
+                  <GraduationCap className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Opționale</span>
+                </div>
+              </div>
             </Link>
             <Link
               href={`/gradinite/${gradinitaId}/menus`}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg p-4 transition flex items-center gap-3 text-white"
+              className="group relative"
             >
-              <Utensils className="w-6 h-6" />
-              <span className="font-semibold">Meniuri Săptămânale</span>
+              <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(234,88,12),0_10px_20px_rgba(234,88,12,0.4)] hover:shadow-[0_3px_0_rgb(234,88,12),0_6px_15px_rgba(234,88,12,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-orange-400">
+                <div className="flex flex-col items-center gap-2">
+                  <Utensils className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Meniuri</span>
+                </div>
+              </div>
             </Link>
             <Link
               href={`/activities?locationId=${gradinitaId}`}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg p-4 transition flex items-center gap-3 text-white"
+              className="group relative"
             >
-              <Palette className="w-6 h-6" />
-              <span className="font-semibold">Activități</span>
+              <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(236,72,153),0_10px_20px_rgba(236,72,153,0.4)] hover:shadow-[0_3px_0_rgb(236,72,153),0_6px_15px_rgba(236,72,153,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-pink-400">
+                <div className="flex flex-col items-center gap-2">
+                  <Palette className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Activități</span>
+                </div>
+              </div>
             </Link>
             <Link
               href={`/attendance/overview?locationId=${gradinitaId}`}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg p-4 transition flex items-center gap-3 text-white"
+              className="group relative"
             >
-              <Calendar className="w-6 h-6" />
-              <span className="font-semibold">Prezență</span>
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(22,163,74),0_10px_20px_rgba(22,163,74,0.4)] hover:shadow-[0_3px_0_rgb(22,163,74),0_6px_15px_rgba(22,163,74,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-green-400">
+                <div className="flex flex-col items-center gap-2">
+                  <Calendar className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Prezență</span>
+                </div>
+              </div>
             </Link>
             <Link
               href={`/reports/financial?locationId=${gradinitaId}`}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg p-4 transition flex items-center gap-3 text-white"
+              className="group relative"
             >
-              <DollarSign className="w-6 h-6" />
-              <span className="font-semibold">Raport Financiar</span>
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(37,99,235),0_10px_20px_rgba(37,99,235,0.4)] hover:shadow-[0_3px_0_rgb(37,99,235),0_6px_15px_rgba(37,99,235,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-400">
+                <div className="flex flex-col items-center gap-2">
+                  <DollarSign className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Raport Financiar</span>
+                </div>
+              </div>
             </Link>
           </div>
         </div>
@@ -368,29 +406,51 @@ export default function GradinitaDetailsPage() {
           )}
         </div>
 
-        {/* Statistici Rapide */}
+        {/* Statistici Rapide - 3D Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
-            <p className="text-sm text-gray-600 font-medium">Total Copii</p>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{totalCopii}</p>
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-6 shadow-[0_6px_0_rgb(59,130,246),0_10px_20px_rgba(59,130,246,0.3)] hover:shadow-[0_3px_0_rgb(59,130,246),0_6px_15px_rgba(59,130,246,0.4)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-300">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md">
+                <Baby className="w-6 h-6 text-white" />
+              </div>
+              <p className="text-sm text-blue-700 font-bold uppercase">Total Copii</p>
+            </div>
+            <p className="text-4xl font-bold text-blue-900">{totalCopii}</p>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
-            <p className="text-sm text-gray-600 font-medium">Prezenți Azi</p>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{prezentiAzi}</p>
-            <p className="text-xs text-gray-500 mt-1">Soon</p>
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-3xl p-6 shadow-[0_6px_0_rgb(22,163,74),0_10px_20px_rgba(22,163,74,0.3)] hover:shadow-[0_3px_0_rgb(22,163,74),0_6px_15px_rgba(22,163,74,0.4)] hover:translate-y-1 transition-all duration-200 border-2 border-green-300">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-md">
+                <CheckCircle className="w-6 h-6 text-white" />
+              </div>
+              <p className="text-sm text-green-700 font-bold uppercase">Prezenți Azi</p>
+            </div>
+            <p className="text-4xl font-bold text-green-900">{prezentiAzi}</p>
+            <p className="text-xs text-green-600 mt-1 font-semibold">Soon</p>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
-            <p className="text-sm text-gray-600 font-medium">Prezență</p>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{procentPrezenta}%</p>
-            <p className="text-xs text-gray-500 mt-1">Soon</p>
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-3xl p-6 shadow-[0_6px_0_rgb(147,51,234),0_10px_20px_rgba(147,51,234,0.3)] hover:shadow-[0_3px_0_rgb(147,51,234),0_6px_15px_rgba(147,51,234,0.4)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-300">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center shadow-md">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
+              <p className="text-sm text-purple-700 font-bold uppercase">Prezență</p>
+            </div>
+            <p className="text-4xl font-bold text-purple-900">{procentPrezenta}%</p>
+            <p className="text-xs text-purple-600 mt-1 font-semibold">Soon</p>
           </div>
           <Link
             href={`/gradinite/${gradinitaId}/grupe`}
-            className="bg-gradient-to-br from-pink-500 to-purple-500 rounded-xl shadow-lg p-6 border-l-4 border-pink-700 hover:shadow-2xl transition cursor-pointer"
+            className="group relative"
           >
-            <p className="text-sm text-white font-medium">Grupe Active</p>
-            <p className="text-3xl font-bold text-white mt-2">{grupeActive}</p>
-            <p className="text-xs text-white/80 mt-1">Click pentru gestionare</p>
+            <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-3xl p-6 shadow-[0_6px_0_rgb(236,72,153),0_10px_20px_rgba(236,72,153,0.4)] hover:shadow-[0_3px_0_rgb(236,72,153),0_6px_15px_rgba(236,72,153,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-pink-400 cursor-pointer">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 bg-white/30 rounded-2xl flex items-center justify-center shadow-md">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-sm text-white font-bold uppercase">Grupe Active</p>
+              </div>
+              <p className="text-4xl font-bold text-white">{grupeActive}</p>
+              <p className="text-xs text-white/90 mt-1 font-semibold group-hover:underline">➡️ Click pentru gestionare</p>
+            </div>
           </Link>
         </div>
 
