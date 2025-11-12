@@ -14,7 +14,9 @@ import {
   Calendar,
   UtensilsCrossed,
   Activity,
-  MessageCircle
+  MessageCircle,
+  Banknote,
+  GraduationCap
 } from 'lucide-react';
 import Link from 'next/link';
 import BrandHeader from '@/components/BrandHeader';
@@ -51,10 +53,26 @@ export default function DashboardParintePage() {
     activitatiSaptamana: 0
   });
   const [unreadMessages, setUnreadMessages] = useState(0);
+  
+  // Cheltuieli lunare
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [taxaLunara, setTaxaLunara] = useState(0);
+  const [optionale, setOptionale] = useState<Array<{nume: string, pret: number, icon: string}>>([]);
+  const [totalOptionale, setTotalOptionale] = useState(0);
 
   useEffect(() => {
     verificaAutentificare();
+    const now = new Date();
+    setSelectedMonth(String(now.getMonth() + 1).padStart(2, '0'));
+    setSelectedYear(String(now.getFullYear()));
   }, []);
+
+  useEffect(() => {
+    if (parinte && selectedMonth && selectedYear) {
+      loadCheltuieliLunare();
+    }
+  }, [parinte, selectedMonth, selectedYear]);
 
   const verificaAutentificare = async () => {
     try {
@@ -218,6 +236,82 @@ export default function DashboardParintePage() {
       console.error('Eroare încărcare mesaje necitite:', error);
     }
   };
+
+  const loadCheltuieliLunare = async () => {
+    try {
+      if (!parinte) return;
+
+      // Încarcă taxa lunară a copilului
+      const copilRef = doc(
+        db,
+        'organizations',
+        parinte.organizationId,
+        'locations',
+        parinte.locationId,
+        'children',
+        parinte.copilCnp
+      );
+      const copilSnap = await getDoc(copilRef);
+      
+      if (copilSnap.exists()) {
+        const copilData = copilSnap.data();
+        const taxa = copilData.costLunar || copilData['Cost Lunar'] || copilData.taxaLunara || copilData.taxa || 0;
+        setTaxaLunara(Number(taxa) || 0);
+      }
+
+      // Încarcă opționalele la care este înscris copilul
+      const optionaleRef = collection(
+        db,
+        'organizations',
+        parinte.organizationId,
+        'locations',
+        parinte.locationId,
+        'optionale'
+      );
+      const optionaleSnap = await getDocs(optionaleRef);
+
+      const optionaleData: Array<{nume: string, pret: number, icon: string}> = [];
+      let totalOpt = 0;
+
+      optionaleSnap.docs.forEach(optionalDoc => {
+        const optionalData = optionalDoc.data();
+        const copiiInscrisi = optionalData.copii || [];
+
+        if (copiiInscrisi.includes(parinte.copilCnp)) {
+          const pret = optionalData.pret || 0;
+          optionaleData.push({
+            nume: optionalData.nume,
+            pret: pret,
+            icon: optionalData.icon || '🎓'
+          });
+          totalOpt += pret;
+        }
+      });
+
+      setOptionale(optionaleData);
+      setTotalOptionale(totalOpt);
+
+    } catch (error) {
+      console.error('Eroare încărcare cheltuieli lunare:', error);
+    }
+  };
+
+  const months = [
+    { value: '01', label: 'Ianuarie' },
+    { value: '02', label: 'Februarie' },
+    { value: '03', label: 'Martie' },
+    { value: '04', label: 'Aprilie' },
+    { value: '05', label: 'Mai' },
+    { value: '06', label: 'Iunie' },
+    { value: '07', label: 'Iulie' },
+    { value: '08', label: 'August' },
+    { value: '09', label: 'Septembrie' },
+    { value: '10', label: 'Octombrie' },
+    { value: '11', label: 'Noiembrie' },
+    { value: '12', label: 'Decembrie' }
+  ];
+
+  const years = [2024, 2025, 2026];
 
   const handleLogout = async () => {
     try {
@@ -414,6 +508,90 @@ export default function DashboardParintePage() {
                 </div>
               </div>
             </Link>
+          </div>
+
+          {/* Cheltuieli Lunare */}
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              💰 Cheltuieli Lunare
+            </h2>
+
+            {/* Selector Perioadă */}
+            <div className="flex gap-4 mb-6">
+              <div className="flex-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Luna</label>
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
+                >
+                  {months.map(m => (
+                    <option key={m.value} value={m.value}>{m.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Anul</label>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
+                >
+                  {years.map(y => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Taxa Lunară */}
+            <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl p-6 border-2 border-orange-200 mb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Banknote className="w-8 h-8 text-orange-600" />
+                  <div>
+                    <p className="font-bold text-gray-900 text-lg">Taxa lunară</p>
+                    <p className="text-sm text-gray-600">(conform programului)</p>
+                  </div>
+                </div>
+                <p className="text-3xl font-bold text-orange-900">{taxaLunara.toLocaleString()} RON</p>
+              </div>
+            </div>
+
+            {/* Opționale */}
+            {optionale.length > 0 && (
+              <div className="space-y-3 mb-4">
+                <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5" />
+                  Opționale
+                </h3>
+                {optionale.map((opt, index) => (
+                  <div 
+                    key={index}
+                    className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-4 border-2 border-green-200"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-3xl">{opt.icon}</span>
+                        <p className="font-bold text-gray-900">{opt.nume}</p>
+                      </div>
+                      <p className="text-2xl font-bold text-green-900">{opt.pret.toLocaleString()} RON</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Total */}
+            <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-6 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold mb-1">TOTAL {months.find(m => m.value === selectedMonth)?.label.toUpperCase()}</p>
+                  <p className="text-4xl font-bold">{(taxaLunara + totalOptionale).toLocaleString()} RON</p>
+                </div>
+                <div className="text-5xl">💰</div>
+              </div>
+            </div>
           </div>
 
           {/* Raport Zilnic Preview */}

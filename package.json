@@ -22,6 +22,8 @@
     "cloudinary": "^2.8.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "docx": "^9.5.1",
+    "file-saver": "^2.0.5",
     "firebase": "^12.4.0",
     "firebase-admin": "^13.5.0",
     "groq-sdk": "^0.34.0",
@@ -38,11 +40,13 @@
     "react-hook-form": "^7.65.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
+    "xlsx": "^0.18.5",
     "yet-another-react-lightbox": "^3.25.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

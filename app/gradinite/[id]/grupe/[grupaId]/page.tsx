@@ -17,7 +17,8 @@ import {
   FileBarChart,
   UtensilsCrossed,
   Mail,
-  GraduationCap
+  GraduationCap,
+  Eye
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
@@ -286,7 +287,14 @@ export default function GrupaChildrenPage() {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-bold text-gray-900 text-lg">{child.nume}</h3>
-                      <p className="text-sm text-gray-600">Vârstă: {child.varsta} ani</p>
+                      <p className="text-sm text-gray-600 mb-2">Vârstă: {child.varsta} ani</p>
+                      <Link
+                        href={`/children/${child.cnp}`}
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition"
+                      >
+                        <Eye className="w-3 h-3" />
+                        Detalii
+                      </Link>
                     </div>
                   </div>
 

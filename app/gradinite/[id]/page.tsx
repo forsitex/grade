@@ -19,7 +19,8 @@ import {
   CheckCircle,
   Palette,
   Utensils,
-  GraduationCap
+  GraduationCap,
+  Banknote
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, collection, getDocs, updateDoc } from 'firebase/firestore';
@@ -301,7 +302,7 @@ export default function GradinitaDetailsPage() {
             >
               <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(37,99,235),0_10px_20px_rgba(37,99,235,0.4)] hover:shadow-[0_3px_0_rgb(37,99,235),0_6px_15px_rgba(37,99,235,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-400">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="text-4xl font-bold text-white group-hover:scale-110 transition-transform">RON</div>
+                  <Banknote className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
                   <span className="text-sm font-bold text-white text-center">Raport Financiar</span>
                 </div>
               </div>

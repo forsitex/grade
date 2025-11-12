@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Building, Baby, Palette, Calendar, Users, Plus, TrendingUp, Activity, Utensils, BarChart3, MessageCircle } from 'lucide-react';
+import { Building, Baby, Palette, Calendar, Users, Plus, TrendingUp, Activity, Utensils, BarChart3, MessageCircle, Banknote } from 'lucide-react';
 import { getLocationDetailsUrl, getAddLocationUrl, getAddPersonUrl, getAddPersonLabel } from '@/lib/location-helpers';
 
 interface GradinitaDashboardProps {
@@ -76,7 +76,7 @@ export default function GradinitaDashboard({ locations, onDelete }: GradinitaDas
           >
             <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(22,163,74),0_10px_20px_rgba(22,163,74,0.4)] hover:shadow-[0_3px_0_rgb(22,163,74),0_6px_15px_rgba(22,163,74,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-green-400">
               <div className="flex flex-col items-center gap-2">
-                <div className="text-4xl font-bold text-white group-hover:scale-110 transition-transform">RON</div>
+                <Banknote className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-bold text-white text-center">Raport Financiar TOTAL</span>
               </div>
             </div>
