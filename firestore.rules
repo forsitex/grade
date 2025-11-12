@@ -191,8 +191,7 @@ service cloud.firestore {
     }
     
     // ========================================
-    // FALLBACK pentru Development
-    // ⚠️ COMENTEAZĂ în producție!
+    // FALLBACK pentru Development - TEMPORAR
     // ========================================
     match /{document=**} {
       allow read, write: if request.auth != null;

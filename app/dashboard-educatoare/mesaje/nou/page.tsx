@@ -9,7 +9,8 @@ import {
   Send,
   Loader2,
   User,
-  Baby
+  Baby,
+  Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
 import BrandHeader from '@/components/BrandHeader';
@@ -26,6 +27,7 @@ export default function MesajNouEducatoarePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [cosmetizing, setCosmetizing] = useState(false);
   const [parinti, setParinti] = useState<Parinte[]>([]);
   const [organizationId, setOrganizationId] = useState('');
   const [locationId, setLocationId] = useState('');
@@ -35,6 +37,7 @@ export default function MesajNouEducatoarePage() {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [originalBody, setOriginalBody] = useState('');
 
   useEffect(() => {
     incarcaParinti();
@@ -120,6 +123,50 @@ export default function MesajNouEducatoarePage() {
       console.error('Eroare încărcare părinți:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const cosmetizeazaCuAI = async () => {
+    if (!body.trim()) {
+      alert('⚠️ Te rog scrie mai întâi un mesaj!');
+      return;
+    }
+
+    setCosmetizing(true);
+    setOriginalBody(body); // Salvează originalul pentru undo
+
+    try {
+      const response = await fetch('/api/cosmetize-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: body.trim()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Eroare la apelul API');
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      if (data.improvedMessage) {
+        setBody(data.improvedMessage);
+        alert('✨ Mesaj cosmetizat cu succes!');
+      } else {
+        throw new Error('Răspuns invalid de la AI');
+      }
+    } catch (error: any) {
+      console.error('Eroare cosmetizare AI:', error);
+      alert('❌ Eroare la cosmetizarea mesajului. Încearcă din nou!');
+    } finally {
+      setCosmetizing(false);
     }
   };
 
@@ -321,7 +368,32 @@ export default function MesajNouEducatoarePage() {
                 </p>
               </div>
 
-              {/* Butoane */}
+              {/* Buton Cosmetizează cu AI */}
+              <div>
+                <button
+                  type="button"
+                  onClick={cosmetizeazaCuAI}
+                  disabled={cosmetizing || !body.trim()}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                >
+                  {cosmetizing ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Se cosmetizează cu AI...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5" />
+                      ✨ Cosmetizează cu AI
+                    </>
+                  )}
+                </button>
+                <p className="text-xs text-gray-500 mt-2 text-center">
+                  AI-ul va face mesajul mai empatic, profesional și corect gramatical
+                </p>
+              </div>
+
+              {/* Butoane Trimite/Anulează */}
               <div className="flex gap-4">
                 <button
                   type="submit"
