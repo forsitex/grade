@@ -56,9 +56,49 @@ export default function MesajNouParintePage() {
       const parinteData = parinteSnap.data();
       setOrganizationId(parinteData.organizationId);
       setLocationId(parinteData.locationId);
-      setGrupaId(parinteData.grupaId);
       setCopilCnp(parinteData.copilCnp);
       setCopilNume(parinteData.copilNume || 'Copil');
+
+      // Găsește copilul în colecția children pentru a obține grupa
+      const childrenRef = collection(
+        db,
+        'organizations',
+        parinteData.organizationId,
+        'locations',
+        parinteData.locationId,
+        'children'
+      );
+      const childrenSnap = await getDocs(childrenRef);
+      
+      let grupaCopil = '';
+      for (const childDoc of childrenSnap.docs) {
+        const childData = childDoc.data();
+        if (childData.cnp === parinteData.copilCnp) {
+          grupaCopil = childData.grupa;
+          break;
+        }
+      }
+
+      if (!grupaCopil) {
+        console.error('Nu s-a găsit grupa copilului');
+        setLoading(false);
+        return;
+      }
+
+      // Obține locația pentru a găsi grupaId din nume
+      const locationRef = doc(
+        db,
+        'organizations',
+        parinteData.organizationId,
+        'locations',
+        parinteData.locationId
+      );
+      const locationSnap = await getDoc(locationRef);
+      const locationData = locationSnap.data();
+      
+      const grupa = locationData?.grupe?.find((g: any) => g.nume === grupaCopil);
+      const grupaIdCopil = grupa?.id || '';
+      setGrupaId(grupaIdCopil);
 
       // Găsește educatoarea din grupa copilului
       const educatoareRef = collection(db, 'educatoare');
@@ -69,7 +109,7 @@ export default function MesajNouParintePage() {
         
         if (educatoareData.organizationId === parinteData.organizationId &&
             educatoareData.locationId === parinteData.locationId &&
-            educatoareData.grupaId === parinteData.grupaId) {
+            educatoareData.grupaId === grupaIdCopil) {
           
           setEducatoare({
             uid: educatoareDoc.id,
@@ -79,6 +119,8 @@ export default function MesajNouParintePage() {
           break;
         }
       }
+
+      console.log('👩‍🏫 Educatoare găsită:', educatoare ? 'DA' : 'NU');
     } catch (error) {
       console.error('Eroare încărcare educatoare:', error);
     } finally {

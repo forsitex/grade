@@ -297,113 +297,122 @@ export default function DashboardParintePage() {
             </div>
           </div>
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
-              <div className="flex items-center justify-between mb-2">
-                <CheckCircle className="w-8 h-8 text-green-500" />
-                <span className="text-2xl font-bold text-green-600">✓</span>
+          {/* Quick Stats - Carduri 3D */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(22,163,74),0_13px_25px_rgba(22,163,74,0.4)] hover:shadow-[0_4px_0_rgb(22,163,74),0_8px_20px_rgba(22,163,74,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-green-400">
+              <div className="flex items-center justify-between mb-3">
+                <CheckCircle className="w-10 h-10 text-white" />
+                <span className="text-3xl font-bold text-white">✓</span>
               </div>
-              <h3 className="text-gray-600 text-sm mb-1">Prezență Azi</h3>
-              <p className="text-2xl font-bold text-gray-900">Prezent</p>
+              <h3 className="text-green-100 text-xs font-semibold mb-1">Prezență Azi</h3>
+              <p className="text-xl font-bold text-white">Prezent</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
-              <div className="flex items-center justify-between mb-2">
-                <ImageIcon className="w-8 h-8 text-blue-500" />
-                <span className="text-2xl font-bold text-blue-600">{stats.pozeNoi}</span>
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(37,99,235),0_13px_25px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_0_rgb(37,99,235),0_8px_20px_rgba(37,99,235,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-400">
+              <div className="flex items-center justify-between mb-3">
+                <ImageIcon className="w-10 h-10 text-white" />
+                <span className="text-3xl font-bold text-white">{stats.pozeNoi}</span>
               </div>
-              <h3 className="text-gray-600 text-sm mb-1">Poze Noi</h3>
-              <p className="text-sm text-gray-500">Ultima săptămână</p>
+              <h3 className="text-blue-100 text-xs font-semibold mb-1">Poze Noi</h3>
+              <p className="text-sm text-blue-50">Ultima săptămână</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
-              <div className="flex items-center justify-between mb-2">
-                <FileText className="w-8 h-8 text-purple-500" />
-                <span className="text-2xl font-bold text-purple-600">{stats.raportDisponibil ? '✓' : '—'}</span>
+            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(147,51,234),0_13px_25px_rgba(147,51,234,0.4)] hover:shadow-[0_4px_0_rgb(147,51,234),0_8px_20px_rgba(147,51,234,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-400">
+              <div className="flex items-center justify-between mb-3">
+                <FileText className="w-10 h-10 text-white" />
+                <span className="text-3xl font-bold text-white">{stats.raportDisponibil ? '✓' : '—'}</span>
               </div>
-              <h3 className="text-gray-600 text-sm mb-1">Raport Zilnic</h3>
-              <p className="text-sm text-gray-500">{stats.raportDisponibil ? 'Disponibil' : 'În așteptare'}</p>
+              <h3 className="text-purple-100 text-xs font-semibold mb-1">Raport Zilnic</h3>
+              <p className="text-sm text-purple-50">{stats.raportDisponibil ? 'Disponibil' : 'În așteptare'}</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
-              <div className="flex items-center justify-between mb-2">
-                <Activity className="w-8 h-8 text-orange-500" />
-                <span className="text-2xl font-bold text-orange-600">{stats.activitatiSaptamana}</span>
+            <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(234,88,12),0_13px_25px_rgba(234,88,12,0.4)] hover:shadow-[0_4px_0_rgb(234,88,12),0_8px_20px_rgba(234,88,12,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-orange-400">
+              <div className="flex items-center justify-between mb-3">
+                <Activity className="w-10 h-10 text-white" />
+                <span className="text-3xl font-bold text-white">{stats.activitatiSaptamana}</span>
               </div>
-              <h3 className="text-gray-600 text-sm mb-1">Activități</h3>
-              <p className="text-sm text-gray-500">Săptămâna aceasta</p>
+              <h3 className="text-orange-100 text-xs font-semibold mb-1">Activități</h3>
+              <p className="text-sm text-orange-50">Săptămâna aceasta</p>
             </div>
           </div>
 
-          {/* Navigație Secțiuni */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+          {/* Navigație Secțiuni - Butoane 3D Profesionale */}
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mb-8">
             <Link
               href="/dashboard-parinte/galerie"
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition group"
+              className="group relative"
             >
-              <ImageIcon className="w-12 h-12 text-blue-500 mb-4 group-hover:scale-110 transition" />
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Galerie Foto</h3>
-              <p className="text-sm text-gray-600">Pozele copilului tău</p>
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(37,99,235),0_13px_25px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_0_rgb(37,99,235),0_8px_20px_rgba(37,99,235,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-400">
+                <div className="flex flex-col items-center gap-2">
+                  <ImageIcon className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Galerie</span>
+                </div>
+              </div>
             </Link>
 
             <Link
               href="/dashboard-parinte/prezenta"
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition group"
+              className="group relative"
             >
-              <CheckCircle className="w-12 h-12 text-green-500 mb-4 group-hover:scale-110 transition" />
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Prezență</h3>
-              <p className="text-sm text-gray-600">Istoric prezență</p>
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(22,163,74),0_13px_25px_rgba(22,163,74,0.4)] hover:shadow-[0_4px_0_rgb(22,163,74),0_8px_20px_rgba(22,163,74,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-green-400">
+                <div className="flex flex-col items-center gap-2">
+                  <CheckCircle className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Prezență</span>
+                </div>
+              </div>
             </Link>
 
             <Link
               href="/dashboard-parinte/rapoarte"
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition group"
+              className="group relative"
             >
-              <FileText className="w-12 h-12 text-purple-500 mb-4 group-hover:scale-110 transition" />
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Rapoarte Zilnice</h3>
-              <p className="text-sm text-gray-600">Ce a făcut azi</p>
+              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(147,51,234),0_13px_25px_rgba(147,51,234,0.4)] hover:shadow-[0_4px_0_rgb(147,51,234),0_8px_20px_rgba(147,51,234,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-400">
+                <div className="flex flex-col items-center gap-2">
+                  <FileText className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Rapoarte</span>
+                </div>
+              </div>
             </Link>
 
             <Link
               href="/dashboard-parinte/activitati"
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition group"
+              className="group relative"
             >
-              <Activity className="w-12 h-12 text-orange-500 mb-4 group-hover:scale-110 transition" />
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Activități</h3>
-              <p className="text-sm text-gray-600">Activități educaționale</p>
+              <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(234,88,12),0_13px_25px_rgba(234,88,12,0.4)] hover:shadow-[0_4px_0_rgb(234,88,12),0_8px_20px_rgba(234,88,12,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-orange-400">
+                <div className="flex flex-col items-center gap-2">
+                  <Activity className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Activități</span>
+                </div>
+              </div>
             </Link>
 
             <Link
               href="/dashboard-parinte/meniu"
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition group"
+              className="group relative"
             >
-              <UtensilsCrossed className="w-12 h-12 text-red-500 mb-4 group-hover:scale-110 transition" />
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Meniu</h3>
-              <p className="text-sm text-gray-600">Ce mănâncă la grădiniță</p>
-            </Link>
-
-            <Link
-              href="/dashboard-parinte/calendar"
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition group"
-            >
-              <Calendar className="w-12 h-12 text-indigo-500 mb-4 group-hover:scale-110 transition" />
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Calendar</h3>
-              <p className="text-sm text-gray-600">Evenimente și activități</p>
+              <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(220,38,38),0_13px_25px_rgba(220,38,38,0.4)] hover:shadow-[0_4px_0_rgb(220,38,38),0_8px_20px_rgba(220,38,38,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-red-400">
+                <div className="flex flex-col items-center gap-2">
+                  <UtensilsCrossed className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Meniu</span>
+                </div>
+              </div>
             </Link>
 
             <Link
               href="/dashboard-parinte/mesaje"
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition group relative"
+              className="group relative"
             >
-              {unreadMessages > 0 && (
-                <span className="absolute top-4 right-4 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
-                  {unreadMessages}
-                </span>
-              )}
-              <MessageCircle className="w-12 h-12 text-blue-500 mb-4 group-hover:scale-110 transition" />
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Mesaje</h3>
-              <p className="text-sm text-gray-600">Comunică cu educatoarea</p>
+              <div className="bg-gradient-to-br from-indigo-600 to-blue-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(79,70,229),0_13px_25px_rgba(79,70,229,0.4)] hover:shadow-[0_4px_0_rgb(79,70,229),0_8px_20px_rgba(79,70,229,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-indigo-400">
+                {unreadMessages > 0 && (
+                  <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse shadow-lg z-20 border-2 border-white">
+                    {unreadMessages}
+                  </span>
+                )}
+                <div className="flex flex-col items-center gap-2">
+                  <MessageCircle className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Mesaje</span>
+                </div>
+              </div>
             </Link>
           </div>
 

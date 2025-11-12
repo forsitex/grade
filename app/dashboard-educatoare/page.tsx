@@ -261,71 +261,103 @@ export default function DashboardEducatoarePage() {
             <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
               <Link
                 href="/activities"
-                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="group relative"
               >
-                <Palette className="w-6 h-6" />
-                <span className="font-semibold text-center text-sm">Activități</span>
+                <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-4 shadow-[0_6px_0_rgb(147,51,234),0_10px_20px_rgba(147,51,234,0.4)] hover:shadow-[0_3px_0_rgb(147,51,234),0_6px_15px_rgba(147,51,234,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-400">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <Palette className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-center text-sm text-white">Activități</span>
+                  </div>
+                </div>
               </Link>
               
               <Link
                 href={`/attendance/group/${educatoare.grupa.id}`}
-                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="group relative"
               >
-                <ClipboardCheck className="w-6 h-6" />
-                <span className="font-semibold text-center text-sm">Prezență</span>
+                <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl p-4 shadow-[0_6px_0_rgb(22,163,74),0_10px_20px_rgba(22,163,74,0.4)] hover:shadow-[0_3px_0_rgb(22,163,74),0_6px_15px_rgba(22,163,74,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-green-400">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <ClipboardCheck className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-center text-sm text-white">Prezență</span>
+                  </div>
+                </div>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/grupe/${educatoare.grupa.id}/gallery`}
-                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="group relative"
               >
-                <Camera className="w-6 h-6" />
-                <span className="font-semibold text-center text-sm">Galerie</span>
+                <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl p-4 shadow-[0_6px_0_rgb(37,99,235),0_10px_20px_rgba(37,99,235,0.4)] hover:shadow-[0_3px_0_rgb(37,99,235),0_6px_15px_rgba(37,99,235,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-400">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <Camera className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-center text-sm text-white">Galerie</span>
+                  </div>
+                </div>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/grupe/${educatoare.grupa.id}/reports`}
-                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="group relative"
               >
-                <FileBarChart className="w-6 h-6" />
-                <span className="font-semibold text-center text-sm">Rapoarte</span>
+                <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-3xl p-4 shadow-[0_6px_0_rgb(234,88,12),0_10px_20px_rgba(234,88,12,0.4)] hover:shadow-[0_3px_0_rgb(234,88,12),0_6px_15px_rgba(234,88,12,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-orange-400">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <FileBarChart className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-center text-sm text-white">Rapoarte</span>
+                  </div>
+                </div>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/grupe/${educatoare.grupa.id}/letters`}
-                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-indigo-500 to-purple-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="group relative"
               >
-                <Mail className="w-6 h-6" />
-                <span className="font-semibold text-center text-sm">Scrisori</span>
+                <div className="bg-gradient-to-br from-indigo-500 to-purple-500 rounded-3xl p-4 shadow-[0_6px_0_rgb(99,102,241),0_10px_20px_rgba(99,102,241,0.4)] hover:shadow-[0_3px_0_rgb(99,102,241),0_6px_15px_rgba(99,102,241,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-indigo-400">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <Mail className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-center text-sm text-white">Scrisori</span>
+                  </div>
+                </div>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/menus`}
-                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-yellow-500 to-orange-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="group relative"
               >
-                <UtensilsCrossed className="w-6 h-6" />
-                <span className="font-semibold text-center text-sm">Meniu</span>
+                <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-3xl p-4 shadow-[0_6px_0_rgb(234,179,8),0_10px_20px_rgba(234,179,8,0.4)] hover:shadow-[0_3px_0_rgb(234,179,8),0_6px_15px_rgba(234,179,8,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-yellow-400">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <UtensilsCrossed className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-center text-sm text-white">Meniu</span>
+                  </div>
+                </div>
               </Link>
               
               <Link
                 href={`/gradinite/${educatoare.locationId}/optionale`}
-                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-pink-500 to-rose-500 text-white rounded-xl hover:scale-105 transition shadow-lg"
+                className="group relative"
               >
-                <GraduationCap className="w-6 h-6" />
-                <span className="font-semibold text-center text-sm">Opționale</span>
+                <div className="bg-gradient-to-br from-pink-500 to-rose-500 rounded-3xl p-4 shadow-[0_6px_0_rgb(236,72,153),0_10px_20px_rgba(236,72,153,0.4)] hover:shadow-[0_3px_0_rgb(236,72,153),0_6px_15px_rgba(236,72,153,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-pink-400">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <GraduationCap className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-center text-sm text-white">Opționale</span>
+                  </div>
+                </div>
               </Link>
               
               <Link
                 href="/dashboard-educatoare/mesaje"
-                className="flex flex-col items-center gap-1.5 p-3 bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition shadow-lg relative"
+                className="group relative"
               >
-                {unreadMessages > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
-                    {unreadMessages}
-                  </span>
-                )}
-                <MessageCircle className="w-6 h-6" />
-                <span className="font-semibold text-center text-sm">Mesaje</span>
+                <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl p-4 shadow-[0_6px_0_rgb(79,70,229),0_10px_20px_rgba(79,70,229,0.4)] hover:shadow-[0_3px_0_rgb(79,70,229),0_6px_15px_rgba(79,70,229,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-indigo-400">
+                  {unreadMessages > 0 && (
+                    <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse shadow-lg z-20 border-2 border-white">
+                      {unreadMessages}
+                    </span>
+                  )}
+                  <div className="flex flex-col items-center gap-1.5">
+                    <MessageCircle className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                    <span className="font-semibold text-center text-sm text-white">Mesaje</span>
+                  </div>
+                </div>
               </Link>
             </div>
           </div>

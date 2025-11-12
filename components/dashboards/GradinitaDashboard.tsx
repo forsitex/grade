@@ -13,76 +13,72 @@ export default function GradinitaDashboard({ locations, onDelete }: GradinitaDas
   
   return (
     <div className="space-y-6">
-      {/* Statistici Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 font-medium">Total Grădinițe</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{totalLocations}</p>
-            </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Building className="w-6 h-6 text-blue-600" />
-            </div>
+      {/* Statistici Cards - 3D */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(37,99,235),0_13px_25px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_0_rgb(37,99,235),0_8px_20px_rgba(37,99,235,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-400">
+          <div className="flex items-center justify-between mb-3">
+            <Building className="w-10 h-10 text-white" />
+            <span className="text-3xl font-bold text-white">{totalLocations}</span>
           </div>
+          <h3 className="text-blue-100 text-xs font-semibold mb-1">Total Grădinițe</h3>
+          <p className="text-sm text-blue-50">Active</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-pink-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 font-medium">Capacitate Totală</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{totalCapacity}</p>
-            </div>
-            <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
-              <Baby className="w-6 h-6 text-pink-600" />
-            </div>
+        <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(236,72,153),0_13px_25px_rgba(236,72,153,0.4)] hover:shadow-[0_4px_0_rgb(236,72,153),0_8px_20px_rgba(236,72,153,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-pink-400">
+          <div className="flex items-center justify-between mb-3">
+            <Baby className="w-10 h-10 text-white" />
+            <span className="text-3xl font-bold text-white">{totalCapacity}</span>
           </div>
+          <h3 className="text-pink-100 text-xs font-semibold mb-1">Capacitate Totală</h3>
+          <p className="text-sm text-pink-50">Locuri disponibile</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 font-medium">Copii Înscriși</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">0</p>
-              <p className="text-xs text-gray-500 mt-1">Soon</p>
-            </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <Activity className="w-6 h-6 text-green-600" />
-            </div>
+        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(22,163,74),0_13px_25px_rgba(22,163,74,0.4)] hover:shadow-[0_4px_0_rgb(22,163,74),0_8px_20px_rgba(22,163,74,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-green-400">
+          <div className="flex items-center justify-between mb-3">
+            <Activity className="w-10 h-10 text-white" />
+            <span className="text-3xl font-bold text-white">0</span>
           </div>
+          <h3 className="text-green-100 text-xs font-semibold mb-1">Copii Înscriși</h3>
+          <p className="text-sm text-green-50">Soon</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 font-medium">Prezență Azi</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">0%</p>
-              <p className="text-xs text-gray-500 mt-1">Soon</p>
-            </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-purple-600" />
-            </div>
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-5 shadow-[0_8px_0_rgb(147,51,234),0_13px_25px_rgba(147,51,234,0.4)] hover:shadow-[0_4px_0_rgb(147,51,234),0_8px_20px_rgba(147,51,234,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-400">
+          <div className="flex items-center justify-between mb-3">
+            <TrendingUp className="w-10 h-10 text-white" />
+            <span className="text-3xl font-bold text-white">0%</span>
           </div>
+          <h3 className="text-purple-100 text-xs font-semibold mb-1">Prezență Azi</h3>
+          <p className="text-sm text-purple-50">Soon</p>
         </div>
       </div>
 
-      {/* Acțiuni Rapide Globale */}
-      <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-2xl shadow-xl p-6 mb-8">
-        <h2 className="text-2xl font-bold text-white mb-4">Acțiuni Rapide Globale</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Acțiuni Rapide Globale - Butoane 3D */}
+      <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+          ⚡ Acțiuni Rapide Globale
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Link
             href={getAddLocationUrl('gradinita')}
-            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg p-4 transition flex items-center gap-3"
+            className="group relative"
           >
-            <Building className="w-6 h-6" />
-            <span className="font-semibold">Adaugă Grădiniță Nouă</span>
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(37,99,235),0_10px_20px_rgba(37,99,235,0.4)] hover:shadow-[0_3px_0_rgb(37,99,235),0_6px_15px_rgba(37,99,235,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-400">
+              <div className="flex flex-col items-center gap-2">
+                <Building className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                <span className="text-sm font-bold text-white text-center">Adaugă Grădiniță</span>
+              </div>
+            </div>
           </Link>
           <Link
             href="/reports/financial"
-            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg p-4 transition flex items-center gap-3"
+            className="group relative"
           >
-            <DollarSign className="w-6 h-6" />
-            <span className="font-semibold">Raport Financiar (Toate Grădinițele)</span>
+            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-5 shadow-[0_6px_0_rgb(22,163,74),0_10px_20px_rgba(22,163,74,0.4)] hover:shadow-[0_3px_0_rgb(22,163,74),0_6px_15px_rgba(22,163,74,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-green-400">
+              <div className="flex flex-col items-center gap-2">
+                <DollarSign className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                <span className="text-sm font-bold text-white text-center">Raport Financiar</span>
+              </div>
+            </div>
           </Link>
         </div>
       </div>
