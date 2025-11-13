@@ -10,14 +10,6 @@ export default function Step4Parinte2({ formData, onChange }: Step4Props) {
 
   return (
     <div className="space-y-6">
-      <div className="text-center mb-8">
-        <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Users className="w-10 h-10 text-purple-600" />
-        </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Date Părinte 2</h2>
-        <p className="text-gray-600">Adaugă al doilea părinte (opțional)</p>
-      </div>
-
       {/* Checkbox Adaugă Părinte 2 */}
       <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6">
         <label className="flex items-center gap-3 cursor-pointer">

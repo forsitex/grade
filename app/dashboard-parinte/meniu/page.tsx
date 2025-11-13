@@ -4,13 +4,20 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { ArrowLeft, UtensilsCrossed, Loader2, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, UtensilsCrossed, Loader2, AlertTriangle, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
 interface Menu {
   id: string;
-  saptamana: string;
-  zile: {
+  weekId?: string;
+  weekStart?: string;
+  weekEnd?: string;
+  published?: boolean;
+  htmlContent?: string;
+  aiGenerated?: boolean;
+  // Structură veche (compatibilitate)
+  saptamana?: string;
+  zile?: {
     luni?: DayMenu;
     marti?: DayMenu;
     miercuri?: DayMenu;
@@ -30,8 +37,10 @@ interface DayMenu {
 export default function MeniuParintePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [menu, setMenu] = useState<Menu | null>(null);
+  const [menus, setMenus] = useState<Menu[]>([]);
+  const [selectedMenuId, setSelectedMenuId] = useState<string>('');
   const [copilNume, setCopilNume] = useState('');
+  const [gradinitaNume, setGradinitaNume] = useState('');
   const [alergii, setAlergii] = useState<string[]>([]);
 
   useEffect(() => {
@@ -57,6 +66,19 @@ export default function MeniuParintePage() {
       const parinteData = parinteSnap.data();
       setCopilNume(parinteData.copilNume);
 
+      // Încarcă numele grădiniței
+      const gradinitaRef = doc(
+        db,
+        'organizations',
+        parinteData.organizationId,
+        'locations',
+        parinteData.locationId
+      );
+      const gradinitaSnap = await getDoc(gradinitaRef);
+      if (gradinitaSnap.exists()) {
+        setGradinitaNume(gradinitaSnap.data().name || '');
+      }
+
       // Citește datele copilului pentru alergii
       const copilRef = doc(
         db,
@@ -76,7 +98,7 @@ export default function MeniuParintePage() {
         }
       }
 
-      // Citește meniul săptămânii curente
+      // Citește TOATE meniurile publicate
       const menusRef = collection(
         db,
         'organizations',
@@ -88,13 +110,24 @@ export default function MeniuParintePage() {
 
       const menusSnap = await getDocs(menusRef);
       
-      if (!menusSnap.empty) {
-        // Ia ultimul meniu (cel mai recent)
-        const latestMenu = menusSnap.docs[menusSnap.docs.length - 1];
-        setMenu({
-          id: latestMenu.id,
-          ...latestMenu.data()
-        } as Menu);
+      // Filtrează doar meniurile publicate și sortează descrescător
+      const publishedMenus = menusSnap.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        } as Menu))
+        .filter(menu => menu.published === true)
+        .sort((a, b) => {
+          const dateA = a.weekStart ? new Date(a.weekStart).getTime() : 0;
+          const dateB = b.weekStart ? new Date(b.weekStart).getTime() : 0;
+          return dateB - dateA;
+        });
+
+      setMenus(publishedMenus);
+      
+      // Selectează primul meniu (cel mai recent)
+      if (publishedMenus.length > 0) {
+        setSelectedMenuId(publishedMenus[0].id);
       }
     } catch (error) {
       console.error('Eroare încărcare meniu:', error);
@@ -108,6 +141,15 @@ export default function MeniuParintePage() {
     const foodLower = food.toLowerCase();
     return alergii.some(alergie => foodLower.includes(alergie));
   };
+
+  const formatWeek = (weekStart: string, weekEnd: string) => {
+    const start = new Date(weekStart);
+    const end = new Date(weekEnd);
+    
+    return `${start.getDate()} ${start.toLocaleDateString('ro-RO', { month: 'long' })} - ${end.getDate()} ${end.toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' })}`;
+  };
+
+  const selectedMenu = menus.find(m => m.id === selectedMenuId);
 
   const days = [
     { key: 'luni', label: 'Luni' },
@@ -176,8 +218,33 @@ export default function MeniuParintePage() {
             </div>
           )}
 
+          {/* Selector Istoric Meniuri */}
+          {menus.length > 0 && (
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Calendar className="w-6 h-6 text-orange-600" />
+                <label className="text-sm font-bold text-gray-900">
+                  Selectează săptămâna:
+                </label>
+              </div>
+              <select
+                value={selectedMenuId}
+                onChange={(e) => setSelectedMenuId(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-orange-500 focus:outline-none text-gray-900 font-medium"
+              >
+                {menus.map((menu, idx) => (
+                  <option key={menu.id} value={menu.id}>
+                    {idx === 0 ? '📍 ' : ''}
+                    {menu.weekStart && menu.weekEnd ? formatWeek(menu.weekStart, menu.weekEnd) : menu.saptamana}
+                    {idx === 0 ? ' (Curent)' : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {/* Meniu */}
-          {!menu ? (
+          {!selectedMenu ? (
             <div className="bg-white rounded-xl shadow-lg p-12 text-center">
               <UtensilsCrossed className="w-16 h-16 mx-auto mb-4 text-gray-300" />
               <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -187,10 +254,28 @@ export default function MeniuParintePage() {
                 Meniul săptămânii va fi publicat în curând
               </p>
             </div>
-          ) : (
+          ) : selectedMenu.htmlContent ? (
+            // Afișare HTML generat de AI
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <div className="p-6 bg-gradient-to-r from-red-500 to-orange-500 text-white">
-                <h2 className="text-2xl font-bold">{menu.saptamana}</h2>
+                <h2 className="text-2xl font-bold">
+                  🍽️ {selectedMenu.weekStart && selectedMenu.weekEnd ? formatWeek(selectedMenu.weekStart, selectedMenu.weekEnd) : selectedMenu.saptamana}
+                </h2>
+                <p className="text-white/90 text-sm mt-1">{gradinitaNume}</p>
+              </div>
+              <div 
+                className="p-6 prose max-w-none"
+                dangerouslySetInnerHTML={{ __html: selectedMenu.htmlContent }}
+              />
+            </div>
+          ) : (
+            // Afișare tabel tradițional
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="p-6 bg-gradient-to-r from-red-500 to-orange-500 text-white">
+                <h2 className="text-2xl font-bold">
+                  {selectedMenu.weekStart && selectedMenu.weekEnd ? formatWeek(selectedMenu.weekStart, selectedMenu.weekEnd) : selectedMenu.saptamana}
+                </h2>
+                <p className="text-white/90 text-sm mt-1">{gradinitaNume}</p>
               </div>
 
               <div className="overflow-x-auto">
@@ -217,7 +302,7 @@ export default function MeniuParintePage() {
                           </div>
                         </td>
                         {days.map(day => {
-                          const dayMenu = menu.zile[day.key as keyof typeof menu.zile];
+                          const dayMenu = selectedMenu.zile?.[day.key as keyof typeof selectedMenu.zile];
                           const food = dayMenu?.[meal.key as keyof DayMenu];
                           const hasAllergen = food && hasAllergy(food);
 

@@ -48,14 +48,6 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
 
   return (
     <div className="space-y-6">
-      <div className="text-center mb-8">
-        <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Baby className="w-10 h-10 text-blue-600" />
-        </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Date Copil</h2>
-        <p className="text-gray-600">Completează informațiile despre copil</p>
-      </div>
-
       {/* Nume Complet */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -74,23 +66,14 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
       {/* CNP */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          CNP *
+          CNP * <span className="text-xs text-gray-500">(nu poate fi modificat)</span>
         </label>
         <input
           type="text"
           value={formData.cnp}
-          onChange={(e) => {
-            const value = e.target.value.replace(/\D/g, '').substring(0, 13);
-            onChange('cnp', value);
-          }}
-          className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 transition ${
-            cnpError
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
-              : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
-          }`}
-          placeholder="ex: 5230415123456"
-          maxLength={13}
-          required
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+          disabled
+          readOnly
         />
         {cnpError && (
           <div className="mt-2 flex items-center gap-2 text-red-600 text-sm">

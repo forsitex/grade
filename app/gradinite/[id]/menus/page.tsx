@@ -9,10 +9,12 @@ import {
   Edit,
   Trash2,
   Calendar,
-  Utensils
+  Utensils,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
-import { collection, getDocs, doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 export default function MenusPage() {
   const router = useRouter();
@@ -78,6 +80,25 @@ export default function MenusPage() {
     } catch (error) {
       console.error('Eroare ștergere:', error);
       alert('❌ Eroare la ștergerea meniului');
+    }
+  };
+
+  const handleTogglePublish = async (menuId: string, currentStatus: boolean) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const menuRef = doc(db, 'organizations', user.uid, 'locations', gradinitaId, 'menus', menuId);
+      await updateDoc(menuRef, {
+        published: !currentStatus,
+        updatedAt: new Date()
+      });
+
+      alert(currentStatus ? '❌ Meniu ascuns de la părinți' : '✅ Meniu publicat pentru părinți!');
+      loadData();
+    } catch (error) {
+      console.error('Eroare actualizare:', error);
+      alert('❌ Eroare la actualizarea meniului');
     }
   };
 
@@ -166,9 +187,22 @@ export default function MenusPage() {
                           🍽️
                         </div>
                         <div>
-                          <h3 className="text-xl font-bold text-gray-900">
-                            Săptămâna {formatWeek(menu.weekStart, menu.weekEnd)}
-                          </h3>
+                          <div className="flex items-center gap-3">
+                            <h3 className="text-xl font-bold text-gray-900">
+                              Săptămâna {formatWeek(menu.weekStart, menu.weekEnd)}
+                            </h3>
+                            {menu.published ? (
+                              <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full flex items-center gap-1">
+                                <Eye className="w-3 h-3" />
+                                Vizibil Părinți
+                              </span>
+                            ) : (
+                              <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full flex items-center gap-1">
+                                <EyeOff className="w-3 h-3" />
+                                Ascuns
+                              </span>
+                            )}
+                          </div>
                           <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
                             <div className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
@@ -182,6 +216,26 @@ export default function MenusPage() {
                         </div>
                       </div>
                       <div className="flex gap-2">
+                        <button
+                          onClick={() => handleTogglePublish(menu.id, menu.published)}
+                          className={`px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2 ${
+                            menu.published
+                              ? 'bg-gray-600 text-white hover:bg-gray-700'
+                              : 'bg-green-600 text-white hover:bg-green-700'
+                          }`}
+                        >
+                          {menu.published ? (
+                            <>
+                              <EyeOff className="w-4 h-4" />
+                              Ascunde
+                            </>
+                          ) : (
+                            <>
+                              <Eye className="w-4 h-4" />
+                              Publică
+                            </>
+                          )}
+                        </button>
                         <Link
                           href={`/gradinite/${gradinitaId}/menus/${menu.id}`}
                           className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2"

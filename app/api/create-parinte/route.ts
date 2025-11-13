@@ -26,9 +26,18 @@ export async function POST(request: NextRequest) {
 
     // 1. Verifică dacă user-ul există deja
     let userRecord;
+    let isNewUser = false;
     try {
       userRecord = await adminAuth.getUserByEmail(email);
       console.log('✅ User already exists:', userRecord.uid);
+      
+      // Actualizează displayName dacă s-a schimbat
+      if (userRecord.displayName !== nume) {
+        await adminAuth.updateUser(userRecord.uid, {
+          displayName: nume,
+        });
+        console.log('✅ Updated user displayName');
+      }
     } catch (error: any) {
       // User nu există, îl creăm
       if (error.code === 'auth/user-not-found') {
@@ -39,6 +48,7 @@ export async function POST(request: NextRequest) {
           emailVerified: false,
           displayName: nume,
         });
+        isNewUser = true;
         console.log('✅ Firebase Auth user created:', userRecord.uid);
       } else {
         throw error;
@@ -47,6 +57,11 @@ export async function POST(request: NextRequest) {
 
     // 2. Creează/Actualizează documentul parinte în Firestore
     const parinteRef = adminDb.collection('parinti').doc(userRecord.uid);
+    
+    // Verifică dacă documentul există pentru a păstra createdAt
+    const parinteDoc = await parinteRef.get();
+    const existingData = parinteDoc.exists ? parinteDoc.data() : null;
+    
     await parinteRef.set({
       email,
       nume,
@@ -56,17 +71,17 @@ export async function POST(request: NextRequest) {
       copilCnp,
       copilNume,
       grupaId,
-      createdAt: new Date(),
+      createdAt: existingData?.createdAt || new Date(),
       updatedAt: new Date(),
-      lastLogin: null,
-      notificationSettings: {
+      lastLogin: existingData?.lastLogin || null,
+      notificationSettings: existingData?.notificationSettings || {
         pushEnabled: true,
         emailEnabled: true,
         smsEnabled: false,
       }
     });
 
-    console.log('✅ Parinte document created in Firestore');
+    console.log(isNewUser ? '✅ Parinte document created in Firestore' : '✅ Parinte document updated in Firestore');
 
     return NextResponse.json({
       success: true,

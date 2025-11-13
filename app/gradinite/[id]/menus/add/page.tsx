@@ -133,6 +133,7 @@ export default function AddMenuPage() {
         weekEnd: weekEnd.toISOString().split('T')[0],
         year: weekStart.getFullYear(),
         weekNumber: getWeekNumber(weekStart),
+        published: true,
         // Salvare HTML generat de AI
         aiGenerated: true,
         htmlContent: htmlContent,
@@ -187,6 +188,7 @@ export default function AddMenuPage() {
         weekEnd: weekEnd.toISOString().split('T')[0],
         year: weekStart.getFullYear(),
         weekNumber: getWeekNumber(weekStart),
+        published: true,
         aiGenerated: false,
         luni: menuData.Luni,
         marti: menuData.Marți,

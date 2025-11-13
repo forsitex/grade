@@ -334,7 +334,31 @@ export default function DashboardParintePage() {
   }
 
   if (!parinte || !parinte.copil) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Baby className="w-8 h-8 text-red-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Copil negăsit</h2>
+          <p className="text-gray-600 mb-4">
+            Nu am putut găsi datele copilului asociat cu contul tău.
+          </p>
+          <p className="text-sm text-gray-500 mb-6">
+            Te rugăm să contactezi grădinița pentru a verifica datele.
+          </p>
+          <button
+            onClick={() => {
+              auth.signOut();
+              router.push('/login');
+            }}
+            className="px-6 py-3 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition"
+          >
+            Deconectare
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
