@@ -58,7 +58,14 @@ export default function DashboardParintePage() {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [taxaLunara, setTaxaLunara] = useState(0);
-  const [optionale, setOptionale] = useState<Array<{nume: string, pret: number, icon: string}>>([]);
+  const [optionale, setOptionale] = useState<Array<{
+    nume: string;
+    pret: number;
+    icon: string;
+    tipPret: 'sedinta' | 'lunar';
+    numarSedinte?: number;
+    pretTotal: number;
+  }>>([]);
   const [totalOptionale, setTotalOptionale] = useState(0);
 
   useEffect(() => {
@@ -270,21 +277,47 @@ export default function DashboardParintePage() {
       );
       const optionaleSnap = await getDocs(optionaleRef);
 
-      const optionaleData: Array<{nume: string, pret: number, icon: string}> = [];
+      const optionaleData: Array<{
+        nume: string;
+        pret: number;
+        icon: string;
+        tipPret: 'sedinta' | 'lunar';
+        numarSedinte?: number;
+        pretTotal: number;
+      }> = [];
       let totalOpt = 0;
 
       optionaleSnap.docs.forEach(optionalDoc => {
         const optionalData = optionalDoc.data();
         const copiiInscrisi = optionalData.copii || [];
 
-        if (copiiInscrisi.includes(parinte.copilCnp)) {
+        const copilInscris = copiiInscrisi.find((c: any) => 
+          typeof c === 'string' ? c === parinte.copilCnp : c.id === parinte.copilCnp
+        );
+
+        if (copilInscris) {
           const pret = optionalData.pret || 0;
+          const tipPret = optionalData.tipPret || 'lunar';
+          let pretTotal = pret;
+          let numarSedinte = undefined;
+
+          if (tipPret === 'sedinta') {
+            numarSedinte = typeof copilInscris === 'object' 
+              ? copilInscris.numarSedinte || 0 
+              : 0;
+            pretTotal = pret * numarSedinte;
+          }
+
           optionaleData.push({
             nume: optionalData.nume,
             pret: pret,
-            icon: optionalData.icon || '🎓'
+            icon: optionalData.icon || '🎓',
+            tipPret: tipPret,
+            numarSedinte: numarSedinte,
+            pretTotal: pretTotal
           });
-          totalOpt += pret;
+
+          totalOpt += pretTotal;
         }
       });
 

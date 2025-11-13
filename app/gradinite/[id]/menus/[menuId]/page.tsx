@@ -125,10 +125,15 @@ export default function EditMenuPage() {
               <div>
                 <h1 className="text-3xl font-bold">📝 Editează Meniu</h1>
                 <p className="text-white/90">{gradinita?.name}</p>
-                <p className="text-sm text-white/80">
-                  Săptămâna {menu.weekStart} - {menu.weekEnd}
-                </p>
-              </div>
+                {menu.weekStart && menu.weekEnd ? (
+                  <p className="text-sm text-white/80">
+                    Săptămâna {menu.weekStart} - {menu.weekEnd}
+                  </p>
+                ) : (
+                  <p className="text-sm text-white/80">
+                    📋 {menu.title || 'Meniu Draft'}
+                  </p>
+                )}              </div>
               <div className="flex gap-3">
                 {!isEditing ? (
                   <button

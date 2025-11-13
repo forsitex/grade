@@ -10,8 +10,12 @@ interface Optional {
   id: string;
   nume: string;
   pret: number;
+  tipPret: 'sedinta' | 'lunar';
   icon: string;
-  copii: string[]; // Array of child IDs
+  copii: Array<{
+    id: string;
+    numarSedinte?: number;
+  }>;
 }
 
 interface Child {
@@ -38,10 +42,10 @@ export default function OptionalePage() {
   const [selectedOptional, setSelectedOptional] = useState<Optional | null>(null);
   
   // Form states
-  const [newOptional, setNewOptional] = useState({ nume: '', pret: 0, icon: '🎓' });
+  const [newOptional, setNewOptional] = useState({ nume: '', pret: 0, tipPret: 'lunar' as 'sedinta' | 'lunar', icon: '🎓' });
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGrupa, setSelectedGrupa] = useState('Toate');
-  const [selectedChildren, setSelectedChildren] = useState<string[]>([]);
+  const [selectedChildren, setSelectedChildren] = useState<Array<{ id: string; numarSedinte?: number }>>([]);
 
   const iconOptions = ['💃', '🥋', '🎹', '🇬🇧', '⚽', '🎨', '🎭', '🎸', '🏊', '🎓'];
 
@@ -119,12 +123,13 @@ export default function OptionalePage() {
       await addDoc(optionaleRef, {
         nume: newOptional.nume,
         pret: newOptional.pret,
+        tipPret: newOptional.tipPret,
         icon: newOptional.icon,
         copii: [],
         createdAt: new Date()
       });
 
-      setNewOptional({ nume: '', pret: 0, icon: '🎓' });
+      setNewOptional({ nume: '', pret: 0, tipPret: 'lunar', icon: '🎓' });
       setShowAddModal(false);
       loadData();
       alert('✅ Opțional adăugat cu succes!');
@@ -150,8 +155,18 @@ export default function OptionalePage() {
   };
 
   const handleOpenChildrenModal = (optional: Optional) => {
-    setSelectedOptional(optional);
-    setSelectedChildren(optional.copii || []);
+    // Setezăm tipPret default dacă lipsește (opționale vechi)
+    const optionalWithDefaults = {
+      ...optional,
+      tipPret: optional.tipPret || 'lunar' as 'sedinta' | 'lunar'
+    };
+    setSelectedOptional(optionalWithDefaults);
+    
+    // Convertim la noul format dacă există date vechi (string[])
+    const copiiFormatati = (optional.copii || []).map(c => 
+      typeof c === 'string' ? { id: c, numarSedinte: 8 } : c
+    );
+    setSelectedChildren(copiiFormatati);
     setShowChildrenModal(true);
   };
 
@@ -160,9 +175,27 @@ export default function OptionalePage() {
       if (!organizationId || !selectedOptional) return;
 
       const optionalRef = doc(db, 'organizations', organizationId, 'locations', gradinitaId, 'optionale', selectedOptional.id);
-      await updateDoc(optionalRef, {
-        copii: selectedChildren
+      
+      // Curățăm copiii - eliminăm câmpurile undefined pentru Firebase
+      const copiiCurati = selectedChildren.map(c => {
+        const copilCurat: any = { id: c.id };
+        if (c.numarSedinte !== undefined) {
+          copilCurat.numarSedinte = c.numarSedinte;
+        }
+        return copilCurat;
       });
+      
+      // Actualizăm copiii și ne asigurăm că tipPret există
+      const updateData: any = {
+        copii: copiiCurati
+      };
+      
+      // Dacă opționalul nu are tipPret, îl setăm la 'lunar' (default pentru opționale vechi)
+      if (!selectedOptional.tipPret) {
+        updateData.tipPret = 'lunar';
+      }
+      
+      await updateDoc(optionalRef, updateData);
 
       setShowChildrenModal(false);
       setSelectedOptional(null);
@@ -177,10 +210,22 @@ export default function OptionalePage() {
   };
 
   const toggleChild = (childId: string) => {
+    setSelectedChildren(prev => {
+      const exists = prev.find(c => c.id === childId);
+      if (exists) {
+        return prev.filter(c => c.id !== childId);
+      } else {
+        return [...prev, { 
+          id: childId, 
+          numarSedinte: (selectedOptional?.tipPret || 'lunar') === 'sedinta' ? 8 : undefined 
+        }];
+      }
+    });
+  };
+
+  const updateNumarSedinte = (childId: string, numar: number) => {
     setSelectedChildren(prev =>
-      prev.includes(childId)
-        ? prev.filter(id => id !== childId)
-        : [...prev, childId]
+      prev.map(c => c.id === childId ? { ...c, numarSedinte: numar } : c)
     );
   };
 
@@ -262,12 +307,23 @@ export default function OptionalePage() {
                 </div>
 
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">{optional.nume}</h3>
-                <p className="text-3xl font-bold text-purple-600 mb-4">{optional.pret} lei</p>
+                <p className="text-3xl font-bold text-purple-600 mb-2">
+                  {optional.pret} lei{(optional.tipPret || 'lunar') === 'sedinta' ? '/ședință' : '/lună'}
+                </p>
+                {(optional.tipPret || 'lunar') === 'sedinta' && (
+                  <p className="text-sm text-gray-600 mb-4">
+                    💡 Prețul final depinde de numărul de ședințe/copil
+                  </p>
+                )}
 
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                  <Users className="w-4 h-4" />
-                  <span>{optional.copii?.length || 0} copii înscriși</span>
-                </div>
+                {!optional.tipPret || optional.tipPret === 'lunar' ? (
+                  <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                    <Users className="w-4 h-4" />
+                    <span>{optional.copii?.length || 0} copii înscriși</span>
+                  </div>
+                ) : (
+                  <div className="h-6 mb-4"></div>
+                )}
 
                 <button
                   onClick={() => handleOpenChildrenModal(optional)}
@@ -321,7 +377,37 @@ export default function OptionalePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Preț (lei/lună)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Tip Preț</label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="tipPret"
+                      value="lunar"
+                      checked={newOptional.tipPret === 'lunar'}
+                      onChange={() => setNewOptional({ ...newOptional, tipPret: 'lunar' })}
+                      className="w-4 h-4 text-purple-600"
+                    />
+                    <span>Abonament lunar</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="tipPret"
+                      value="sedinta"
+                      checked={newOptional.tipPret === 'sedinta'}
+                      onChange={() => setNewOptional({ ...newOptional, tipPret: 'sedinta' })}
+                      className="w-4 h-4 text-purple-600"
+                    />
+                    <span>Preț per ședință</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Preț ({newOptional.tipPret === 'sedinta' ? 'lei/ședință' : 'lei/lună'})
+                </label>
                 <input
                   type="number"
                   value={newOptional.pret}
@@ -423,15 +509,33 @@ export default function OptionalePage() {
                   >
                     <input
                       type="checkbox"
-                      checked={selectedChildren.includes(child.id)}
+                      checked={selectedChildren.some(c => c.id === child.id)}
                       onChange={() => toggleChild(child.id)}
                       className="w-5 h-5 text-purple-600 rounded"
                     />
                     <div className="flex-1">
                       <p className="font-semibold text-gray-900">{child.nume}</p>
                       <p className="text-sm text-gray-600">{child.grupa}</p>
+                      
+                      {(selectedOptional.tipPret || 'lunar') === 'sedinta' && 
+                       selectedChildren.some(c => c.id === child.id) && (
+                        <div className="mt-2 flex items-center gap-2">
+                          <label className="text-xs text-gray-600">Ședințe/lună:</label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="20"
+                            value={selectedChildren.find(c => c.id === child.id)?.numarSedinte || 8}
+                            onChange={(e) => updateNumarSedinte(child.id, parseInt(e.target.value) || 8)}
+                            className="w-16 px-2 py-1 border-2 border-gray-300 rounded text-sm"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </div>
+                      )}
                     </div>
-                    {selectedOptional.copii?.includes(child.id) && (
+                    {selectedOptional.copii?.some((c: any) => 
+                      typeof c === 'string' ? c === child.id : c.id === child.id
+                    ) && (
                       <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
                         ✓ Înscris
                       </span>

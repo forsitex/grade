@@ -27,6 +27,9 @@ interface Optional {
   nume: string;
   pret: number;
   icon: string;
+  tipPret: 'sedinta' | 'lunar';
+  numarSedinte?: number;
+  pretTotal: number;
 }
 
 export default function ChildDetailsPage() {
@@ -109,14 +112,33 @@ export default function ChildDetailsPage() {
         const optionalData = optionalDoc.data();
         const copiiInscrisi = optionalData.copii || [];
 
-        if (copiiInscrisi.includes(cnp)) {
+        const copilInscris = copiiInscrisi.find((c: any) => 
+          typeof c === 'string' ? c === cnp : c.id === cnp
+        );
+
+        if (copilInscris) {
           const pret = optionalData.pret || 0;
+          const tipPret = optionalData.tipPret || 'lunar';
+          let pretTotal = pret;
+          let numarSedinte = undefined;
+
+          if (tipPret === 'sedinta') {
+            numarSedinte = typeof copilInscris === 'object' 
+              ? copilInscris.numarSedinte || 0 
+              : 0;
+            pretTotal = pret * numarSedinte;
+          }
+
           optionaleData.push({
             nume: optionalData.nume,
             pret: pret,
-            icon: optionalData.icon || '🎓'
+            icon: optionalData.icon || '🎓',
+            tipPret: tipPret,
+            numarSedinte: numarSedinte,
+            pretTotal: pretTotal
           });
-          totalOpt += pret;
+
+          totalOpt += pretTotal;
         }
       });
 
@@ -146,7 +168,19 @@ export default function ChildDetailsPage() {
       [''],
       ['Descriere', 'Sumă (RON)'],
       ['Taxa lunară (conform programului)', child.taxaLunara],
-      ...optionale.map(opt => [`Opțional ${opt.nume}`, opt.pret]),
+      ...optionale.map(opt => {
+        if (opt.tipPret === 'sedinta') {
+          return [
+            `Opțional ${opt.nume} (${opt.pret} lei/ședință × ${opt.numarSedinte} ședințe)`,
+            opt.pretTotal
+          ];
+        } else {
+          return [
+            `Opțional ${opt.nume} (Abonament lunar)`,
+            opt.pretTotal
+          ];
+        }
+      }),
       [''],
       ['TOTAL', child.taxaLunara + totalOptionale]
     ];
