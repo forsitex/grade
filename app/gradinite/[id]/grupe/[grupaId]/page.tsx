@@ -78,7 +78,10 @@ export default function GrupaChildrenPage() {
             id: doc.id,
             ...doc.data()
           }))
-          .filter((child: any) => child.grupa === grupaData?.nume) as Child[];
+          .filter((child: any) => {
+            // Verifică că are grupă și nume
+            return child.grupa === grupaData?.nume && child.nume;
+          }) as Child[];
         
         setChildren(childrenData);
       }

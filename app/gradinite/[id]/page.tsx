@@ -145,9 +145,44 @@ export default function GradinitaDetailsPage() {
 
   // Statistici
   const totalCopii = children.length;
-  const prezentiAzi = 0; // TODO: Implementare prezență
-  const procentPrezenta = totalCopii > 0 ? Math.round((prezentiAzi / totalCopii) * 100) : 0;
+  const [prezentiAzi, setPrezentiAzi] = useState(0);
+  const [procentPrezenta, setProcentPrezenta] = useState(0);
   const grupeActive = gradinita?.grupe?.length || 0;
+
+  // Încarcă prezența azi
+  useEffect(() => {
+    if (gradinita && children.length > 0) {
+      loadAttendanceToday();
+    }
+  }, [gradinita, children]);
+
+  const loadAttendanceToday = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user || children.length === 0) return;
+
+      const today = new Date().toISOString().split('T')[0];
+      let presentCount = 0;
+
+      // Verifică prezența pentru fiecare copil
+      for (const child of children) {
+        const attendanceRef = doc(db, 'organizations', user.uid, 'locations', gradinitaId, 'children', child.id, 'attendance', today);
+        const attendanceSnap = await getDoc(attendanceRef);
+        
+        if (attendanceSnap.exists()) {
+          const data = attendanceSnap.data();
+          if (data.status === 'present') {
+            presentCount++;
+          }
+        }
+      }
+
+      setPrezentiAzi(presentCount);
+      setProcentPrezenta(totalCopii > 0 ? Math.round((presentCount / totalCopii) * 100) : 0);
+    } catch (error) {
+      console.error('Eroare încărcare prezență:', error);
+    }
+  };
 
   if (loading) {
     return (
@@ -417,26 +452,30 @@ export default function GradinitaDetailsPage() {
             </div>
             <p className="text-4xl font-bold text-blue-900">{totalCopii}</p>
           </div>
-          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-3xl p-6 shadow-[0_6px_0_rgb(22,163,74),0_10px_20px_rgba(22,163,74,0.3)] hover:shadow-[0_3px_0_rgb(22,163,74),0_6px_15px_rgba(22,163,74,0.4)] hover:translate-y-1 transition-all duration-200 border-2 border-green-300">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-md">
-                <CheckCircle className="w-6 h-6 text-white" />
+          <Link href={`/attendance/overview?locationId=${gradinitaId}`} className="block">
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-3xl p-6 shadow-[0_6px_0_rgb(22,163,74),0_10px_20px_rgba(22,163,74,0.3)] hover:shadow-[0_3px_0_rgb(22,163,74),0_6px_15px_rgba(22,163,74,0.4)] hover:translate-y-1 transition-all duration-200 border-2 border-green-300 cursor-pointer">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-md">
+                  <CheckCircle className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-sm text-green-700 font-bold uppercase">Prezenți Azi</p>
               </div>
-              <p className="text-sm text-green-700 font-bold uppercase">Prezenți Azi</p>
+              <p className="text-4xl font-bold text-green-900">{prezentiAzi}</p>
+              <p className="text-xs text-green-600 mt-1 font-semibold">din {totalCopii} copii</p>
             </div>
-            <p className="text-4xl font-bold text-green-900">{prezentiAzi}</p>
-            <p className="text-xs text-green-600 mt-1 font-semibold">Soon</p>
-          </div>
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-3xl p-6 shadow-[0_6px_0_rgb(147,51,234),0_10px_20px_rgba(147,51,234,0.3)] hover:shadow-[0_3px_0_rgb(147,51,234),0_6px_15px_rgba(147,51,234,0.4)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-300">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center shadow-md">
-                <Calendar className="w-6 h-6 text-white" />
+          </Link>
+          <Link href={`/attendance/overview?locationId=${gradinitaId}`} className="block">
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-3xl p-6 shadow-[0_6px_0_rgb(147,51,234),0_10px_20px_rgba(147,51,234,0.3)] hover:shadow-[0_3px_0_rgb(147,51,234),0_6px_15px_rgba(147,51,234,0.4)] hover:translate-y-1 transition-all duration-200 border-2 border-purple-300 cursor-pointer">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center shadow-md">
+                  <Calendar className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-sm text-purple-700 font-bold uppercase">Prezență</p>
               </div>
-              <p className="text-sm text-purple-700 font-bold uppercase">Prezență</p>
+              <p className="text-4xl font-bold text-purple-900">{procentPrezenta}%</p>
+              <p className="text-xs text-purple-600 mt-1 font-semibold">Azi</p>
             </div>
-            <p className="text-4xl font-bold text-purple-900">{procentPrezenta}%</p>
-            <p className="text-xs text-purple-600 mt-1 font-semibold">Soon</p>
-          </div>
+          </Link>
           <Link
             href={`/gradinite/${gradinitaId}/grupe`}
             className="group relative"
