@@ -15,6 +15,8 @@ interface Menu {
   published?: boolean;
   htmlContent?: string;
   aiGenerated?: boolean;
+  isDraft?: boolean;
+  title?: string;
   // Structură veche (compatibilitate)
   saptamana?: string;
   zile?: {
@@ -116,7 +118,7 @@ export default function MeniuParintePage() {
           id: doc.id,
           ...doc.data()
         } as Menu))
-        .filter(menu => menu.published === true)
+        .filter(menu => menu.published === true && !menu.isDraft)
         .sort((a, b) => {
           const dateA = a.weekStart ? new Date(a.weekStart).getTime() : 0;
           const dateB = b.weekStart ? new Date(b.weekStart).getTime() : 0;
@@ -125,8 +127,19 @@ export default function MeniuParintePage() {
 
       setMenus(publishedMenus);
       
-      // Selectează primul meniu (cel mai recent)
-      if (publishedMenus.length > 0) {
+      // Selectează automat meniul săptămânii curente
+      const today = new Date();
+      const currentWeekMenu = publishedMenus.find(menu => {
+        if (!menu.weekStart || !menu.weekEnd) return false;
+        const start = new Date(menu.weekStart);
+        const end = new Date(menu.weekEnd);
+        return today >= start && today <= end;
+      });
+      
+      if (currentWeekMenu) {
+        setSelectedMenuId(currentWeekMenu.id);
+      } else if (publishedMenus.length > 0) {
+        // Dacă nu există meniu pentru săptămâna curentă, selectează cel mai recent
         setSelectedMenuId(publishedMenus[0].id);
       }
     } catch (error) {

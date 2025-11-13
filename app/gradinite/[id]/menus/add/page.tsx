@@ -35,6 +35,7 @@ export default function AddMenuPage() {
   const [aiAnalysisData, setAiAnalysisData] = useState<any>(null);
   const [showExample, setShowExample] = useState(false);
   const [numarCopii, setNumarCopii] = useState<number>(20);
+  const [menuTitle, setMenuTitle] = useState<string>('');
 
   const [menuData, setMenuData] = useState<any>({
     Luni: {},
@@ -125,34 +126,22 @@ export default function AddMenuPage() {
       const user = auth.currentUser;
       if (!user) return;
 
-      if (!selectedWeek) {
-        alert('Te rugăm să selectezi săptămâna!');
+      if (!menuTitle.trim()) {
+        alert('Te rugăm să introduci un titlu pentru meniu!');
         return;
       }
-
-      // Calculează weekEnd
-      const weekStart = new Date(selectedWeek);
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-
-      const weekId = `${weekStart.getFullYear()}-W${getWeekNumber(weekStart)}`;
 
       const menusRef = collection(db, 'organizations', user.uid, 'locations', gradinitaId, 'menus');
       
       await addDoc(menusRef, {
-        weekId,
-        weekStart: weekStart.toISOString().split('T')[0],
-        weekEnd: weekEnd.toISOString().split('T')[0],
-        year: weekStart.getFullYear(),
-        weekNumber: getWeekNumber(weekStart),
-        published: true,
-        // Salvare HTML generat de AI
+        title: menuTitle.trim(),
+        isDraft: true,
+        published: false,
         aiGenerated: true,
         htmlContent: htmlContent,
         numarCopii: metadata?.numarCopii || 20,
         generatedModel: metadata?.model || 'groq',
         generatedCost: metadata?.cost || '0',
-        // Păstrare structură veche pentru compatibilitate
         luni: {},
         marti: {},
         miercuri: {},
@@ -164,7 +153,7 @@ export default function AddMenuPage() {
         createdAt: new Date()
       });
 
-      alert('✅ Meniu AI salvat cu succes!');
+      alert('✅ Meniu salvat ca DRAFT! Programează-l pe calendar.');
       router.push(`/gradinite/${gradinitaId}/menus`);
     } catch (error) {
       console.error('Eroare salvare:', error);
@@ -180,27 +169,17 @@ export default function AddMenuPage() {
       const user = auth.currentUser;
       if (!user) return;
 
-      if (!selectedWeek) {
-        alert('Te rugăm să selectezi săptămâna!');
+      if (!menuTitle.trim()) {
+        alert('Te rugăm să introduci un titlu pentru meniu!');
         return;
       }
-
-      // Calculează weekEnd
-      const weekStart = new Date(selectedWeek);
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-
-      const weekId = `${weekStart.getFullYear()}-W${getWeekNumber(weekStart)}`;
 
       const menusRef = collection(db, 'organizations', user.uid, 'locations', gradinitaId, 'menus');
       
       await addDoc(menusRef, {
-        weekId,
-        weekStart: weekStart.toISOString().split('T')[0],
-        weekEnd: weekEnd.toISOString().split('T')[0],
-        year: weekStart.getFullYear(),
-        weekNumber: getWeekNumber(weekStart),
-        published: true,
+        title: menuTitle.trim(),
+        isDraft: true,
+        published: false,
         aiGenerated: false,
         luni: menuData.Luni,
         marti: menuData.Marți,
@@ -213,7 +192,7 @@ export default function AddMenuPage() {
         createdAt: new Date()
       });
 
-      alert('✅ Meniu salvat cu succes!');
+      alert('✅ Meniu salvat ca DRAFT! Programează-l pe calendar.');
       router.push(`/gradinite/${gradinitaId}/menus`);
     } catch (error) {
       console.error('Eroare salvare:', error);
@@ -521,17 +500,21 @@ Salată de roșii cu ulei măsline`}
             </>
           )}
 
-          {/* Selector Săptămână */}
+          {/* Titlu Meniu */}
           <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Selectează Săptămâna (Luni):
+              📝 Titlu Meniu (ex: Meniu 1, Meniu Iarnă, etc.) *
             </label>
             <input
-              type="date"
-              value={selectedWeek}
-              onChange={(e) => setSelectedWeek(e.target.value)}
+              type="text"
+              value={menuTitle}
+              onChange={(e) => setMenuTitle(e.target.value)}
+              placeholder="Ex: Meniu 1"
               className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-orange-500 text-lg"
             />
+            <p className="text-sm text-gray-600 mt-2">
+              💡 Acest meniu va fi salvat ca DRAFT și îl vei programa pe calendar
+            </p>
           </div>
 
           {/* Tab-uri Zile */}
