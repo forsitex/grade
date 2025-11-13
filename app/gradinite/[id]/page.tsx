@@ -18,6 +18,7 @@ import {
   FileText,
   CheckCircle,
   Palette,
+  Upload,
   Utensils,
   GraduationCap,
   Banknote
@@ -293,7 +294,21 @@ export default function GradinitaDetailsPage() {
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
             ⚡ Acțiuni Rapide
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+            <Link
+              href={`/gradinite/${gradinitaId}/import-siiir`}
+              className="group relative"
+            >
+              <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl p-5 shadow-[0_6px_0_rgb(59,130,246),0_10px_20px_rgba(59,130,246,0.4)] hover:shadow-[0_3px_0_rgb(59,130,246),0_6px_15px_rgba(59,130,246,0.5)] hover:translate-y-1 transition-all duration-200 border-2 border-blue-400 relative">
+                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                  NOU
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <Upload className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-bold text-white text-center">Import SIIIR</span>
+                </div>
+              </div>
+            </Link>
             <Link
               href={`/gradinite/${gradinitaId}/optionale`}
               className="group relative"

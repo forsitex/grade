@@ -221,9 +221,9 @@ export default function ImportSIIIRPage() {
           </ol>
         </div>
 
-        {/* Upload Zone */}
+        {/* Upload Zone - Colorat și Vizibil */}
         {!result && (
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+          <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-2xl shadow-2xl p-8 mb-6 border-2 border-blue-200">
             <input
               type="file"
               accept=".xls,.xlsx"
@@ -234,24 +234,31 @@ export default function ImportSIIIRPage() {
             />
             <label
               htmlFor="file-upload"
-              className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all ${
+              className={`border-4 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all block ${
                 file
-                  ? 'border-green-400 bg-green-50'
-                  : 'border-gray-300 hover:border-purple-400 hover:bg-purple-50'
+                  ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-50 shadow-[0_8px_0_rgb(34,197,94),0_12px_24px_rgba(34,197,94,0.3)] hover:shadow-[0_4px_0_rgb(34,197,94),0_8px_20px_rgba(34,197,94,0.4)]'
+                  : 'border-blue-400 bg-gradient-to-br from-blue-100 to-purple-100 shadow-[0_8px_0_rgb(59,130,246),0_12px_24px_rgba(59,130,246,0.3)] hover:shadow-[0_4px_0_rgb(59,130,246),0_8px_20px_rgba(59,130,246,0.4)] hover:border-purple-500'
               }`}
             >
-              <FileSpreadsheet className={`w-16 h-16 mx-auto mb-4 ${file ? 'text-green-500' : 'text-gray-400'}`} />
+              <div className={`w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center ${
+                file ? 'bg-green-500' : 'bg-gradient-to-br from-blue-500 to-purple-600'
+              } shadow-lg`}>
+                <FileSpreadsheet className="w-10 h-10 text-white" />
+              </div>
               {file ? (
                 <div>
-                  <p className="text-green-600 font-semibold mb-2">✓ {file.name}</p>
-                  <p className="text-sm text-gray-600">Click pentru a schimba fișierul</p>
+                  <p className="text-2xl font-bold text-green-600 mb-2">✓ {file.name}</p>
+                  <p className="text-sm text-green-700 font-semibold">Click pentru a schimba fișierul</p>
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-700 font-semibold mb-2">
-                    Click pentru a selecta fișier Excel din SIIIR
+                  <p className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-3">
+                    📁 Click pentru a selecta fișier Excel
                   </p>
-                  <p className="text-sm text-gray-500">Acceptă: .xls, .xlsx</p>
+                  <p className="text-lg font-semibold text-blue-700 mb-2">Exportat din SIIIR</p>
+                  <p className="text-sm text-gray-600 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-lg inline-block">
+                    Acceptă: .xls, .xlsx
+                  </p>
                 </div>
               )}
             </label>
@@ -327,21 +334,21 @@ export default function ImportSIIIRPage() {
               </div>
             )}
 
-            {/* Buton Import */}
+            {/* Buton Import - Colorat și Vizibil */}
             <button
               onClick={handleImport}
               disabled={importing}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white py-6 rounded-2xl font-bold text-xl shadow-[0_8px_0_rgb(34,197,94),0_12px_24px_rgba(34,197,94,0.4)] hover:shadow-[0_4px_0_rgb(34,197,94),0_8px_20px_rgba(34,197,94,0.5)] hover:translate-y-1 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 border-2 border-green-400"
             >
               {importing ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Se importă...
+                  <Loader2 className="w-7 h-7 animate-spin" />
+                  <span>Se importă...</span>
                 </>
               ) : (
                 <>
-                  <Upload className="w-5 h-5" />
-                  Confirmă Import
+                  <Upload className="w-7 h-7" />
+                  <span>🚀 Confirmă Import</span>
                 </>
               )}
             </button>

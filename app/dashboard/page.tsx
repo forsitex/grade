@@ -143,15 +143,32 @@ ROLUL TĂU:
 FUNCȚIONALITĂȚI PRINCIPALE GRADINITA.APP:
 
 1. IMPORT SIIIR (Sistem Informatic Integrat Învățământ România)
-   - Upload fișier Excel .xls exportat din SIIIR
-   - Header pe rândul 6
-   - Câmpuri: CNP, Nume, Prenume, Sex, Data nașterii, Grupă
-   - Creare automată grupe cu detectare inteligentă vârstă/emoji
-   - Validare CNP (13 cifre)
-   - Skip duplicate automat
-   - Preview înainte de import
-   - Buton "Șterge toți copiii" pentru re-import
-   - Acces: Dashboard grădiniță → "Import SIIIR"
+   IMPORTANT: Fișierul exportat din SIIIR vine DEJA cu header pe rândul 6! NU trebuie modificat!
+   
+   LOCAȚIE: Dashboard principal → Click "Vezi detalii" pe card grădiniță → Secțiunea "Acțiuni Rapide" → Card "Import SIIIR" (cu badge NOU)
+   
+   Pași simpli:
+   1. Click "Import SIIIR" din Acțiuni Rapide
+   2. Click "Selectează fișier" → Alege fișierul .xls exportat din SIIIR
+   3. Platforma detectează AUTOMAT header-ul de pe rândul 6
+   4. Vezi preview cu copii și grupe detectate
+   5. Click "Confirmă Import"
+   6. Gata! Copiii și grupele sunt create automat
+   
+   Ce face platforma AUTOMAT:
+   - Detectează header pe rândul 6 (nu trebuie setat manual!)
+   - Citește câmpurile: CNP, Nume, Prenume, Sex, Data nașterii, Grupă
+   - Creează grupe automat cu vârstă/emoji detectate
+   - Validează CNP (13 cifre)
+   - Skip duplicate (verificare CNP)
+   - Calculează vârsta din data nașterii
+   
+   Utilizatorul NU trebuie să:
+   - ❌ Modifice fișierul Excel
+   - ❌ Seteze manual header-ul
+   - ❌ Creeze grupele manual
+   
+   Buton "Șterge toți copiii": pentru re-import dacă e nevoie
 
 2. GESTIONARE COPII
    - Adăugare manuală: Dashboard → "Adaugă Copil"

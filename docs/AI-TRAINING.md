@@ -14,20 +14,35 @@
 ### 1. IMPORT SIIIR ⭐
 **Ce face:** Import automat liste copii din SIIIR (Sistemul Informatic Integrat Învățământ România)
 
-**Pași:**
-1. Dashboard grădiniță → Click "Import SIIIR"
-2. Upload fișier Excel `.xls` exportat din SIIIR
-3. Preview automat (copii, grupe, erori)
-4. Confirmă import
-5. Grupele și copiii se creează automat
+**⚠️ IMPORTANT:** Fișierul exportat din SIIIR vine DEJA cu header pe rândul 6! Utilizatorul NU trebuie să modifice nimic!
 
-**Detalii tehnice:**
-- Header pe rândul 6
-- Câmpuri: CNP, Nume, Prenume, Sex, Data nașterii, Grupă
-- Validare CNP (13 cifre obligatorii)
-- Skip duplicate automat (verificare CNP)
-- Detectare inteligentă vârstă/emoji pentru grupe
-- Buton "Șterge toți copiii" pentru re-import
+**📍 LOCAȚIE EXACTĂ:**
+Dashboard principal → Click "Vezi detalii" pe card grădiniță → Secțiunea "Acțiuni Rapide" → Card "Import SIIIR" (cu badge NOU albastru-cyan)
+
+**Pași SIMPLI:**
+1. Click "Import SIIIR" din Acțiuni Rapide
+2. Click "Selectează fișier" → Alege fișierul `.xls` exportat din SIIIR
+3. Platforma detectează AUTOMAT header-ul de pe rândul 6
+4. Vezi preview cu copii și grupe detectate
+5. Click "Confirmă Import"
+6. Gata! Copiii și grupele sunt create automat
+
+**Ce face platforma AUTOMAT:**
+- ✅ Detectează header pe rândul 6 (NU trebuie setat manual!)
+- ✅ Citește câmpurile: CNP, Nume, Prenume, Sex, Data nașterii, Grupă
+- ✅ Creează grupe automat cu vârstă/emoji detectate
+- ✅ Validează CNP (13 cifre obligatorii)
+- ✅ Skip duplicate automat (verificare CNP)
+- ✅ Calculează vârsta din data nașterii
+- ✅ Combină Nume + Prenume într-un singur câmp
+
+**Utilizatorul NU trebuie să:**
+- ❌ Modifice fișierul Excel
+- ❌ Seteze manual header-ul
+- ❌ Creeze grupele manual
+- ❌ Calculeze vârsta manual
+
+**Buton "Șterge toți copiii":** Pentru re-import dacă e nevoie (șterge doar copiii, nu grupele)
 
 **Exemple grupe detectate:**
 - "Grupa mică A" → 3-4 ani, emoji 🐻
@@ -390,7 +405,52 @@ organizations/{uid}/
 
 ### Exemple răspunsuri:
 
-**Întrebare:** "Cum adaug un copil?"
+**Întrebare:** "Cum adaug copii din SIIIR?"
+
+**Răspuns AI CORECT:**
+```
+Pentru import SIIIR, urmează acești pași simpli:
+
+📍 **Unde găsești:**
+Dashboard principal → Click "Vezi detalii" pe card grădiniță → Secțiunea "Acțiuni Rapide" → Card "Import SIIIR" (badge NOU)
+
+**Pași:**
+1. Click "Import SIIIR" din Acțiuni Rapide
+2. Click "Selectează fișier" → Alege fișierul .xls exportat din SIIIR
+3. Platforma detectează AUTOMAT header-ul (rândul 6)
+4. Vezi preview cu copii și grupe
+5. Click "Confirmă Import"
+6. Gata! ✅
+
+⚠️ **IMPORTANT:** NU trebuie să modifici fișierul Excel! Vine deja cu header pe rândul 6.
+
+✨ **Ce face platforma automat:**
+- Detectează header
+- Creează grupele
+- Validează CNP
+- Calculează vârsta
+```
+
+**Întrebare:** "Trebuie să setez header-ul pe rândul 6?"
+
+**Răspuns AI CORECT:**
+```
+❌ NU! Fișierul exportat din SIIIR vine DEJA cu header pe rândul 6!
+
+Tu doar:
+1. Exporți fișierul din SIIIR (așa cum e)
+2. Upload în Gradinita.app
+3. Platforma detectează AUTOMAT header-ul
+
+NU trebuie să:
+- ❌ Modifici fișierul Excel
+- ❌ Muți header-ul
+- ❌ Adaugi/ștergi rânduri
+
+Platforma știe că header-ul e pe rândul 6 și îl citește automat! 🎯
+```
+
+**Întrebare:** "Cum adaug un copil manual?"
 
 **Răspuns AI:**
 ```
