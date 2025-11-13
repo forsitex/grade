@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Save, Plus, X, Sparkles } from 'lucide-react';
+import { ArrowLeft, Save, Plus, X, Sparkles, Eye, EyeOff, FileText } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
-import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, getDocs } from 'firebase/firestore';
 import MenuAnalysisUpload from '@/components/MenuAnalysisUpload';
 
 const ZILE = ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri'];
@@ -33,6 +33,8 @@ export default function AddMenuPage() {
   const [newPreparat, setNewPreparat] = useState({ nume: '', descriere: '' });
   const [showAIAnalysis, setShowAIAnalysis] = useState(false);
   const [aiAnalysisData, setAiAnalysisData] = useState<any>(null);
+  const [showExample, setShowExample] = useState(false);
+  const [numarCopii, setNumarCopii] = useState<number>(20);
 
   const [menuData, setMenuData] = useState<any>({
     Luni: {},
@@ -66,6 +68,16 @@ export default function AddMenuPage() {
 
       if (gradinitaSnap.exists()) {
         setGradinita(gradinitaSnap.data());
+      }
+
+      // Calculează numărul de copii înscriși
+      const childrenRef = collection(db, 'organizations', user.uid, 'locations', gradinitaId, 'children');
+      const childrenSnap = await getDocs(childrenRef);
+      const totalCopii = childrenSnap.size;
+      
+      if (totalCopii > 0) {
+        setNumarCopii(totalCopii);
+        console.log(`✅ Număr copii înscriși: ${totalCopii}`);
       }
     } catch (error) {
       console.error('Eroare încărcare date:', error);
@@ -269,8 +281,201 @@ export default function AddMenuPage() {
 
           {/* AI Analysis Section */}
           {showAIAnalysis && (
-            <div className="mb-6">
-              <MenuAnalysisUpload
+            <>
+              {/* Card Vezi Exemplu */}
+              <div className="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-2xl p-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-6 h-6 text-purple-600" />
+                    <h3 className="text-xl font-bold text-gray-900">Exemplu Meniu pentru AI</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowExample(!showExample)}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition flex items-center gap-2"
+                  >
+                    {showExample ? (
+                      <>
+                        <EyeOff className="w-4 h-4" />
+                        Ascunde
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-4 h-4" />
+                        Vezi Exemplu
+                      </>
+                    )}
+                  </button>
+                </div>
+                
+                {showExample && (
+                  <div className="bg-white rounded-xl p-6 border-2 border-purple-100 max-h-96 overflow-y-auto">
+                    <pre className="text-sm text-gray-700 whitespace-pre-wrap font-mono">
+{`LUNI
+
+Mic dejun (8:00-8:30):
+Lapte integral pasteurizat 3.5% grăsime
+Corn flakes cu miere
+Pâine albă proaspătă
+Unt 82% grăsime
+Gem de căpșuni
+
+Gustare de dimineață (10:00):
+Mere Golden proaspete
+Biscuiți Petit Beurre
+
+Masă de prânz (12:00-12:30):
+Supă cremă de legume (morcovi, cartofi, țelină, ceapă, smântână 20%)
+Piept de pui la grătar
+Orez alb fiert
+Salată de varză albă cu morcovi și ulei de floarea soarelui
+
+Masă de prânz - felul 2:
+Compot de mere cu scorțișoară
+
+Gustare (15:00):
+Iaurt natural 3.5% grăsime
+Miere de albine
+Banane
+
+Masă de seară (17:00):
+Omletă din 2 ouă cu brânză telemea și roșii proaspete
+Pâine integrală
+
+═══════════════════════════════════════════════════════════════
+
+MARȚI
+
+Mic dejun:
+Lapte cald cu cacao Nesquik
+Clătite cu brânză de vaci dulce și stafide
+Zahăr pudră
+
+Gustare de dimineață:
+Portocale proaspete
+Stafide sultanine
+
+Masă de prânz:
+Ciorbă de legume cu smântână (cartofi, morcovi, păstârnac, pătrunjel, ardei, smântână)
+Chiftele din carne de vită tocată cu pâine și ou
+Piure de cartofi cu lapte și unt
+Salată de castraveți murați
+
+Masă de prânz - felul 2:
+Salată de castraveți proaspeți cu smântână
+
+Gustare:
+Brânză de vaci 5% grăsime
+Smântână 20%
+Pâine prăjită
+
+Masă de seară:
+Paste integrale penne cu sos de roșii (roșii, usturoi, busuioc, ulei măsline)
+Parmezan ras
+Salată verde (iceberg, rucola, ulei măsline, lămâie)
+
+═══════════════════════════════════════════════════════════════
+
+MIERCURI
+
+Mic dejun:
+Lapte integral
+Fulgi de ovăz cu miere și nuci
+Pâine graham
+Miere poliflora
+
+Gustare de dimineață:
+Kiwi proaspăt
+Biscuiți cu susan
+
+Masă de prânz:
+Supă de pui cu tăieței de casă (piept pui, morcovi, ceapă, pătrunjel, tăieței ouă)
+File de pește pangasius la cuptor cu lămâie
+Cartofi natur fierți
+Salată de sfeclă roșie cu ulei
+
+Masă de prânz - felul 2:
+Salată de varză roșie cu mere
+
+Gustare:
+Budincă de vanilie Dr. Oetker
+Pere Williams proaspete
+
+Masă de seară:
+Terci de griș cu lapte, scorțișoară și zahăr
+Compot de prune uscate
+
+═══════════════════════════════════════════════════════════════
+
+JOI
+
+Mic dejun:
+Lapte cu miere
+Pâine albă
+Unt de arahide Nutella
+
+Gustare de dimineață:
+Struguri albi fără sâmburi
+Nuci
+
+Masă de prânz:
+Ciorbă de fasole boabe cu afumătură (fasole albă, ciolan afumat, morcovi, ceapă, ardei, bulion)
+Tocană de vită cu ceapă și ardei gras
+Mămăligă
+
+Masă de prânz - felul 2:
+Murături asortate (gogonele, ardei, varză)
+
+Gustare:
+Brânză telemea
+Roșii proaspete
+Pâine albă
+
+Masă de seară:
+Orez cu legume (mazăre congelată, morcovi, porumb dulce conservă, ceapă, ulei)
+Salată de varză albă cu lămâie
+
+═══════════════════════════════════════════════════════════════
+
+VINERI
+
+Mic dejun:
+Lapte integral
+Cereale Nesquik ciocolată
+Pâine albă
+Gem de zmeură
+
+Gustare de dimineață:
+Mandarine proaspete
+Biscuiți cu ovăz și ciocolată
+
+Masă de prânz:
+Supă cremă de ciuperci champignon cu smântână și crutoane
+Pulpe de pui la cuptor cu condimente
+Cartofi wedges la cuptor cu rozmarin
+Salată de morcovi rasa cu lămâie și zahăr
+
+Masă de prânz - felul 2:
+Sos de usturoi cu smântână
+
+Gustare:
+Iaurt cu fructe de pădure (căpșuni, afine, zmeură)
+Biscuiți digestivi
+
+Masă de seară:
+Pizza cu șuncă presată, mozzarella, sos roșii, oregano
+Salată de roșii cu ulei măsline`}
+                    </pre>
+                  </div>
+                )}
+                
+                <p className="text-sm text-purple-700 mt-4">
+                  💡 <strong>Sfat:</strong> Folosește acest format când încarci fișierul pentru a obține cele mai bune rezultate de la AI!
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <MenuAnalysisUpload
+                initialNumarCopii={numarCopii}
                 onSaveMenu={handleSaveAIMenu}
                 onAnalysisComplete={(analysis) => {
                   setAiAnalysisData(analysis);
@@ -313,6 +518,7 @@ export default function AddMenuPage() {
                 }}
               />
             </div>
+            </>
           )}
 
           {/* Selector Săptămână */}

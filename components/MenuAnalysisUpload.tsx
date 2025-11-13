@@ -6,14 +6,15 @@ import { Upload, FileText, Loader2, CheckCircle, AlertCircle, Download, Save } f
 interface MenuAnalysisUploadProps {
   onAnalysisComplete?: (analysis: any) => void;
   onSaveMenu?: (htmlContent: string, metadata: any) => void;
+  initialNumarCopii?: number;
 }
 
-export default function MenuAnalysisUpload({ onAnalysisComplete, onSaveMenu }: MenuAnalysisUploadProps) {
+export default function MenuAnalysisUpload({ onAnalysisComplete, onSaveMenu, initialNumarCopii = 20 }: MenuAnalysisUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const [numarCopii, setNumarCopii] = useState<number>(20);
+  const [numarCopii, setNumarCopii] = useState<number>(initialNumarCopii);
   const [progressiveHtml, setProgressiveHtml] = useState<string>('');
   const [currentDay, setCurrentDay] = useState<string>('');
   const [generatingDays, setGeneratingDays] = useState(false);
