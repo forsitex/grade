@@ -1,4 +1,4 @@
-import { Baby, Building } from 'lucide-react';
+import { Baby, Building, Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface Step1Props {
@@ -25,9 +25,8 @@ export default function Step1GradinitaGrupa({ formData, gradinite, onChange }: S
   }, [formData.gradinitaId, gradinite]);
 
   const programe = [
-    { value: 'Normal', label: 'Normal (8:00-16:00)' },
-    { value: 'Prelungit', label: 'Prelungit (7:00-18:00)' },
-    { value: 'Săptămânal', label: 'Săptămânal (cu cazare)' }
+    { value: 'Normal', label: 'Normal' },
+    { value: 'Prelungit', label: 'Prelungit' }
   ];
 
   return (
@@ -150,6 +149,35 @@ export default function Step1GradinitaGrupa({ formData, gradinite, onChange }: S
               </div>
             </label>
           ))}
+        </div>
+      </div>
+
+      {/* Ore Program Personalizat */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            <Clock className="w-4 h-4 inline mr-1" />
+            Ora Start
+          </label>
+          <input
+            type="time"
+            value={formData.programOraStart || '08:00'}
+            onChange={(e) => onChange('programOraStart', e.target.value)}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            <Clock className="w-4 h-4 inline mr-1" />
+            Ora Sfârșit
+          </label>
+          <input
+            type="time"
+            value={formData.programOraEnd || '16:00'}
+            onChange={(e) => onChange('programOraEnd', e.target.value)}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition"
+          />
         </div>
       </div>
     </div>

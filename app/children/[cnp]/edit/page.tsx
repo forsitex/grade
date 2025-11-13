@@ -28,6 +28,8 @@ export default function EditChildPage() {
     gradinitaId: '',
     grupa: '',
     program: '',
+    programOraStart: '08:00',
+    programOraEnd: '16:00',
     
     // Step 2
     nume: '',
@@ -120,6 +122,8 @@ export default function EditChildPage() {
           gradinitaId: foundLocationId,
           grupa: foundChild.grupa || '',
           program: foundChild.program || '',
+          programOraStart: foundChild.programOraStart || '08:00',
+          programOraEnd: foundChild.programOraEnd || '16:00',
           nume: foundChild.nume || '',
           prenume: foundChild.prenume || '',
           cnp: foundChild.cnp || '',

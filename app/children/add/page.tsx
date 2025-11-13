@@ -31,6 +31,8 @@ function AddChildContent() {
     gradinitaId: gradinitaIdFromUrl || '',
     grupa: '',
     program: '',
+    programOraStart: '08:00',
+    programOraEnd: '16:00',
     
     // Step 2
     nume: '',
@@ -191,6 +193,8 @@ function AddChildContent() {
         fotoUrl: formData.fotoUrl,
         grupa: formData.grupa,
         program: formData.program,
+        programOraStart: formData.programOraStart,
+        programOraEnd: formData.programOraEnd,
         parinte1: {
           nume: formData.parinte1Nume.toUpperCase(),
           cnp: formData.parinte1Cnp,
