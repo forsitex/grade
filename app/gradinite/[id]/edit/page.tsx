@@ -18,6 +18,8 @@ export default function EditGradinitaPage() {
     address: '',
     capacity: 0,
     program: 'Normal',
+    programOraStart: '08:00',
+    programOraEnd: '16:00',
     phone: '',
     email: '',
     reprezentant: {
@@ -49,6 +51,8 @@ export default function EditGradinitaPage() {
           address: data.address || '',
           capacity: data.capacity || 0,
           program: data.program || 'Normal',
+          programOraStart: data.programOraStart || '08:00',
+          programOraEnd: data.programOraEnd || '16:00',
           phone: data.phone || '',
           email: data.email || '',
           reprezentant: {
@@ -90,6 +94,8 @@ export default function EditGradinitaPage() {
         address: formData.address,
         capacity: parseInt(formData.capacity.toString()),
         program: formData.program,
+        programOraStart: formData.programOraStart,
+        programOraEnd: formData.programOraEnd,
         phone: formData.phone,
         email: formData.email,
         reprezentant: {
@@ -189,7 +195,10 @@ export default function EditGradinitaPage() {
                   placeholder="Ex: Strada Florilor, Nr. 10, București"
                 />
               </div>
+            </div>
 
+            {/* Program - Grid 3 coloane */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   <Clock className="w-4 h-4 inline mr-1" />
@@ -200,10 +209,36 @@ export default function EditGradinitaPage() {
                   onChange={(e) => setFormData({ ...formData, program: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition"
                 >
-                  <option value="Normal">Normal (8:00 - 16:00)</option>
-                  <option value="Prelungit">Prelungit (7:00 - 18:00)</option>
+                  <option value="Normal">Normal</option>
+                  <option value="Prelungit">Prelungit</option>
                   <option value="Flexibil">Flexibil</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <Clock className="w-4 h-4 inline mr-1" />
+                  Ora Start
+                </label>
+                <input
+                  type="time"
+                  value={formData.programOraStart}
+                  onChange={(e) => setFormData({ ...formData, programOraStart: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <Clock className="w-4 h-4 inline mr-1" />
+                  Ora Sfârșit
+                </label>
+                <input
+                  type="time"
+                  value={formData.programOraEnd}
+                  onChange={(e) => setFormData({ ...formData, programOraEnd: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition"
+                />
               </div>
             </div>
           </div>

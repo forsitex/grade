@@ -304,7 +304,9 @@ export default function GradinitaDashboard({ locations, onDelete }: GradinitaDas
                 </p>
                 {location.program && (
                   <p className="text-gray-700 text-sm font-semibold flex items-center gap-2">
-                    <span className="text-lg">🕐</span> Program: <span className="text-pink-600">{location.program}</span>
+                    <span className="text-lg">🕐</span> Program: <span className="text-pink-600">
+                      {location.program} ({location.programOraStart || '08:00'} - {location.programOraEnd || '16:00'})
+                    </span>
                   </p>
                 )}
               </div>
