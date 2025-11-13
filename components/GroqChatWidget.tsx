@@ -93,13 +93,24 @@ export default function GroqChatWidget({
   return (
     <>
       {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 z-50 flex items-center gap-2"
-        >
-          <Sparkles className="w-6 h-6" />
-          <MessageCircle className="w-6 h-6" />
-        </button>
+        <>
+          {/* Tooltip deasupra butonului */}
+          <div className="fixed bottom-28 right-6 bg-gradient-to-r from-purple-50 to-pink-50 text-gray-700 px-4 py-3 rounded-2xl shadow-lg border-2 border-purple-200 z-50 max-w-xs">
+            <p className="text-sm text-center font-semibold">
+              💬 <strong>Ai nevoie de mai mult ajutor?</strong><br/>
+              <span className="text-xs">Folosește chat-ul AI!</span>
+            </p>
+          </div>
+          
+          {/* Buton AI */}
+          <button
+            onClick={() => setIsOpen(true)}
+            className="fixed bottom-6 right-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 z-50 flex items-center gap-2"
+          >
+            <Sparkles className="w-6 h-6" />
+            <MessageCircle className="w-6 h-6" />
+          </button>
+        </>
       )}
 
       {isOpen && (

@@ -147,6 +147,7 @@ export default function GradinitaDetailsPage() {
   const totalCopii = children.length;
   const [prezentiAzi, setPrezentiAzi] = useState(0);
   const [procentPrezenta, setProcentPrezenta] = useState(0);
+  const [loadingAttendance, setLoadingAttendance] = useState(true);
   const grupeActive = gradinita?.grupe?.length || 0;
 
   // Încarcă prezența azi
@@ -157,9 +158,13 @@ export default function GradinitaDetailsPage() {
   }, [gradinita, children]);
 
   const loadAttendanceToday = async () => {
+    setLoadingAttendance(true);
     try {
       const user = auth.currentUser;
-      if (!user || children.length === 0) return;
+      if (!user || children.length === 0) {
+        setLoadingAttendance(false);
+        return;
+      }
 
       const today = new Date().toISOString().split('T')[0];
       let presentCount = 0;
@@ -181,6 +186,8 @@ export default function GradinitaDetailsPage() {
       setProcentPrezenta(totalCopii > 0 ? Math.round((presentCount / totalCopii) * 100) : 0);
     } catch (error) {
       console.error('Eroare încărcare prezență:', error);
+    } finally {
+      setLoadingAttendance(false);
     }
   };
 
@@ -460,8 +467,17 @@ export default function GradinitaDetailsPage() {
                 </div>
                 <p className="text-sm text-green-700 font-bold uppercase">Prezenți Azi</p>
               </div>
-              <p className="text-4xl font-bold text-green-900">{prezentiAzi}</p>
-              <p className="text-xs text-green-600 mt-1 font-semibold">din {totalCopii} copii</p>
+              {loadingAttendance ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 border-3 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                  <p className="text-sm text-green-700 font-semibold">Se încarcă...</p>
+                </div>
+              ) : (
+                <>
+                  <p className="text-4xl font-bold text-green-900">{prezentiAzi}</p>
+                  <p className="text-xs text-green-600 mt-1 font-semibold">din {totalCopii} copii</p>
+                </>
+              )}
             </div>
           </Link>
           <Link href={`/attendance/overview?locationId=${gradinitaId}`} className="block">
@@ -472,8 +488,17 @@ export default function GradinitaDetailsPage() {
                 </div>
                 <p className="text-sm text-purple-700 font-bold uppercase">Prezență</p>
               </div>
-              <p className="text-4xl font-bold text-purple-900">{procentPrezenta}%</p>
-              <p className="text-xs text-purple-600 mt-1 font-semibold">Azi</p>
+              {loadingAttendance ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 border-3 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                  <p className="text-sm text-purple-700 font-semibold">Se încarcă...</p>
+                </div>
+              ) : (
+                <>
+                  <p className="text-4xl font-bold text-purple-900">{procentPrezenta}%</p>
+                  <p className="text-xs text-purple-600 mt-1 font-semibold">Azi</p>
+                </>
+              )}
             </div>
           </Link>
           <Link
