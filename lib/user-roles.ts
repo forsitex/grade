@@ -7,6 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 export type UserRole = 
   | 'admin'           // Owner firmă (cel care s-a înregistrat)
   | 'educatoare'      // Educatoare grădiniță
+  | 'profesor'        // Profesor opționale
   | 'manager-camin'   // Manager cămin bătrâni
   | 'manager-clinica' // Manager clinică/spital
   | 'doctor'          // Doctor în clinică
@@ -37,6 +38,7 @@ export interface UserData {
 export const ROLE_DASHBOARDS: Record<UserRole, string> = {
   'admin': '/dashboard',
   'educatoare': '/dashboard-educatoare',
+  'profesor': '/dashboard-profesor',
   'manager-camin': '/dashboard-manager-camin',
   'manager-clinica': '/dashboard-manager-clinica',
   'doctor': '/dashboard-doctor',
@@ -54,6 +56,7 @@ export const ROLE_DASHBOARDS: Record<UserRole, string> = {
 const ROLE_COLLECTIONS: Record<UserRole, string> = {
   'admin': 'organizations',      // Admin = organizationId = uid
   'educatoare': 'educatoare',
+  'profesor': 'profesori',
   'manager-camin': 'managers',
   'manager-clinica': 'managers',
   'doctor': 'doctors',
@@ -86,6 +89,7 @@ export async function getUserRole(): Promise<UserData | null> {
     // Verifică fiecare rol în ordine (de la cel mai specific la cel mai general)
     const rolesToCheck: UserRole[] = [
       'educatoare',
+      'profesor',
       'manager-camin',
       'manager-clinica',
       'doctor',

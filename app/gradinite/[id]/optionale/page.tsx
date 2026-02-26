@@ -4,7 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Plus, Edit, Trash2, Users, Search, X } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
-import { doc, getDoc, collection, getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
+interface ProgramSlot {
+  zi: string;
+  oraStart: string;
+  oraEnd: string;
+}
 
 interface Optional {
   id: string;
@@ -16,6 +23,10 @@ interface Optional {
     id: string;
     numarSedinte?: number;
   }>;
+  program?: ProgramSlot[];
+  profesorId?: string;
+  profesorNume?: string;
+  profesorEmail?: string;
 }
 
 interface Child {
@@ -39,15 +50,34 @@ export default function OptionalePage() {
   // Modal states
   const [showAddModal, setShowAddModal] = useState(false);
   const [showChildrenModal, setShowChildrenModal] = useState(false);
+  const [showProgramModal, setShowProgramModal] = useState(false);
   const [selectedOptional, setSelectedOptional] = useState<Optional | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<{ zi: string; ora: string } | null>(null);
+  const [editingEvent, setEditingEvent] = useState<ProgramSlot | null>(null);
   
   // Form states
-  const [newOptional, setNewOptional] = useState({ nume: '', pret: 0, tipPret: 'lunar' as 'sedinta' | 'lunar', icon: '🎓' });
+  const [newOptional, setNewOptional] = useState({ 
+    nume: '', 
+    pret: 0, 
+    tipPret: 'lunar' as 'sedinta' | 'lunar', 
+    icon: '🎓',
+    profesorNume: '',
+    profesorEmail: '',
+    profesorParola: ''
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGrupa, setSelectedGrupa] = useState('Toate');
   const [selectedChildren, setSelectedChildren] = useState<Array<{ id: string; numarSedinte?: number }>>([]);
 
   const iconOptions = ['💃', '🥋', '🎹', '🇬🇧', '⚽', '🎨', '🎭', '🎸', '🏊', '🎓'];
+  
+  // Calendar constants
+  const zile = ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri'];
+  const ore = Array.from({ length: 11 }, (_, i) => `${8 + i}:00`); // 8:00 - 18:00
+  const culoriOptionale = [
+    'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-red-500', 
+    'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-orange-500'
+  ];
 
   useEffect(() => {
     loadData();
@@ -115,21 +145,60 @@ export default function OptionalePage() {
       if (!organizationId) return;
 
       if (!newOptional.nume || newOptional.pret <= 0) {
-        alert('Te rugăm să completezi toate câmpurile!');
+        alert('Te rugăm să complețezi toate câmpurile!');
         return;
       }
 
+      if (!newOptional.profesorNume || !newOptional.profesorEmail || !newOptional.profesorParola) {
+        alert('Te rugăm să complețezi datele profesorului!');
+        return;
+      }
+
+      // Creează cont Firebase Auth pentru profesor
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        newOptional.profesorEmail,
+        newOptional.profesorParola
+      );
+      const profesorUid = userCredential.user.uid;
+
+      // Creează document profesor în Firestore
+      await setDoc(doc(db, 'profesori', profesorUid), {
+        nume: newOptional.profesorNume,
+        email: newOptional.profesorEmail,
+        organizationId: organizationId,
+        locationId: gradinitaId,
+        createdAt: new Date()
+      });
+
+      // Creează opționalul cu datele profesorului
       const optionaleRef = collection(db, 'organizations', organizationId, 'locations', gradinitaId, 'optionale');
-      await addDoc(optionaleRef, {
+      const optionalDoc = await addDoc(optionaleRef, {
         nume: newOptional.nume,
         pret: newOptional.pret,
         tipPret: newOptional.tipPret,
         icon: newOptional.icon,
         copii: [],
+        profesorId: profesorUid,
+        profesorNume: newOptional.profesorNume,
+        profesorEmail: newOptional.profesorEmail,
         createdAt: new Date()
       });
 
-      setNewOptional({ nume: '', pret: 0, tipPret: 'lunar', icon: '🎓' });
+      // Actualizează documentul profesorului cu optionalId
+      await updateDoc(doc(db, 'profesori', profesorUid), {
+        optionalId: optionalDoc.id
+      });
+
+      setNewOptional({ 
+        nume: '', 
+        pret: 0, 
+        tipPret: 'lunar', 
+        icon: '🎓',
+        profesorNume: '',
+        profesorEmail: '',
+        profesorParola: ''
+      });
       setShowAddModal(false);
       loadData();
       alert('✅ Opțional adăugat cu succes!');
@@ -227,6 +296,92 @@ export default function OptionalePage() {
     setSelectedChildren(prev =>
       prev.map(c => c.id === childId ? { ...c, numarSedinte: numar } : c)
     );
+  };
+
+  // Calendar functions
+  const handleOpenProgramModal = (zi: string, ora: string) => {
+    setSelectedSlot({ zi, ora });
+    setShowProgramModal(true);
+  };
+
+  const handleAddProgram = async (optionalId: string, oraStart: string, oraEnd: string) => {
+    try {
+      if (!organizationId || !selectedSlot) return;
+
+      const optional = optionale.find(o => o.id === optionalId);
+      if (!optional) return;
+
+      const newSlot: ProgramSlot = {
+        zi: selectedSlot.zi,
+        oraStart,
+        oraEnd
+      };
+
+      const updatedProgram = [...(optional.program || []), newSlot];
+      
+      const optionalRef = doc(db, 'organizations', organizationId, 'locations', gradinitaId, 'optionale', optionalId);
+      await updateDoc(optionalRef, {
+        program: updatedProgram
+      });
+
+      setShowProgramModal(false);
+      setSelectedSlot(null);
+      loadData();
+      alert('✅ Program adăugat cu succes!');
+    } catch (error) {
+      console.error('Eroare adăugare program:', error);
+      alert('❌ Eroare la adăugarea programului');
+    }
+  };
+
+  const handleDeleteProgram = async (optionalId: string, slot: ProgramSlot) => {
+    if (!confirm(`Sigur vrei să ștergi ${slot.zi} ${slot.oraStart}-${slot.oraEnd}?`)) return;
+
+    try {
+      if (!organizationId) return;
+
+      const optional = optionale.find(o => o.id === optionalId);
+      if (!optional) return;
+
+      const updatedProgram = (optional.program || []).filter(
+        s => !(s.zi === slot.zi && s.oraStart === slot.oraStart && s.oraEnd === slot.oraEnd)
+      );
+
+      const optionalRef = doc(db, 'organizations', organizationId, 'locations', gradinitaId, 'optionale', optionalId);
+      await updateDoc(optionalRef, {
+        program: updatedProgram
+      });
+
+      loadData();
+      alert('✅ Program șters cu succes!');
+    } catch (error) {
+      console.error('Eroare ștergere program:', error);
+      alert('❌ Eroare la ștergerea programului');
+    }
+  };
+
+  const getEventAtSlot = (zi: string, ora: string) => {
+    for (const optional of optionale) {
+      if (!optional.program) continue;
+      
+      for (const slot of optional.program) {
+        if (slot.zi === zi) {
+          const slotStart = parseInt(slot.oraStart.split(':')[0]);
+          const slotEnd = parseInt(slot.oraEnd.split(':')[0]);
+          const currentOra = parseInt(ora.split(':')[0]);
+          
+          if (currentOra >= slotStart && currentOra < slotEnd) {
+            return { optional, slot, isStart: currentOra === slotStart };
+          }
+        }
+      }
+    }
+    return null;
+  };
+
+  const getOptionalColor = (optionalId: string) => {
+    const index = optionale.findIndex(o => o.id === optionalId);
+    return culoriOptionale[index % culoriOptionale.length];
   };
 
   const filteredChildren = children.filter(child => {
@@ -347,6 +502,71 @@ export default function OptionalePage() {
               </div>
             )}
           </div>
+
+          {/* Calendar Săptămânal */}
+          {optionale.length > 0 && (
+            <div className="mt-8 bg-white rounded-2xl shadow-xl p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">📅 Program Săptămânal</h2>
+              
+              <div className="overflow-x-auto">
+                <div className="min-w-[800px]">
+                  {/* Header cu zilele */}
+                  <div className="grid grid-cols-6 gap-2 mb-2">
+                    <div className="text-sm font-semibold text-gray-600 p-2">Ora</div>
+                    {zile.map(zi => (
+                      <div key={zi} className="text-sm font-semibold text-gray-900 p-2 text-center bg-gray-100 rounded-lg">
+                        {zi}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Grid cu ore și evenimente */}
+                  {ore.map(ora => (
+                    <div key={ora} className="grid grid-cols-6 gap-2 mb-2">
+                      <div className="text-sm text-gray-600 p-2 font-medium">{ora}</div>
+                      {zile.map(zi => {
+                        const event = getEventAtSlot(zi, ora);
+                        
+                        if (event && event.isStart) {
+                          const color = getOptionalColor(event.optional.id);
+                          const duration = parseInt(event.slot.oraEnd.split(':')[0]) - parseInt(event.slot.oraStart.split(':')[0]);
+                          
+                          return (
+                            <div
+                              key={zi}
+                              className={`${color} text-white p-2 rounded-lg cursor-pointer hover:opacity-90 transition flex flex-col justify-between`}
+                              style={{ gridRow: `span ${duration}` }}
+                              onClick={() => handleDeleteProgram(event.optional.id, event.slot)}
+                            >
+                              <div>
+                                <p className="font-bold text-sm">{event.optional.icon} {event.optional.nume}</p>
+                                <p className="text-xs opacity-90">{event.slot.oraStart} - {event.slot.oraEnd}</p>
+                              </div>
+                              <button className="text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded mt-1">
+                                🗑️ Șterge
+                              </button>
+                            </div>
+                          );
+                        } else if (event && !event.isStart) {
+                          return <div key={zi} />;
+                        } else {
+                          return (
+                            <button
+                              key={zi}
+                              onClick={() => handleOpenProgramModal(zi, ora)}
+                              className="border-2 border-dashed border-gray-200 hover:border-purple-400 hover:bg-purple-50 rounded-lg p-2 transition text-gray-400 hover:text-purple-600 text-xs"
+                            >
+                              +
+                            </button>
+                          );
+                        }
+                      })}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -434,6 +654,44 @@ export default function OptionalePage() {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Separator */}
+              <div className="border-t-2 border-gray-200 my-4"></div>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">👨‍🏫 Date Profesor</h3>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Nume Profesor</label>
+                <input
+                  type="text"
+                  value={newOptional.profesorNume}
+                  onChange={(e) => setNewOptional({ ...newOptional, profesorNume: e.target.value })}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                  placeholder="Ex: Ion Popescu"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email Profesor</label>
+                <input
+                  type="email"
+                  value={newOptional.profesorEmail}
+                  onChange={(e) => setNewOptional({ ...newOptional, profesorEmail: e.target.value })}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                  placeholder="profesor@email.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Parolă Temporară</label>
+                <input
+                  type="password"
+                  value={newOptional.profesorParola}
+                  onChange={(e) => setNewOptional({ ...newOptional, profesorParola: e.target.value })}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                  placeholder="Minim 6 caractere"
+                />
+                <p className="text-xs text-gray-500 mt-1">Profesorul va putea schimba parola după prima autentificare</p>
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -571,6 +829,87 @@ export default function OptionalePage() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Program Modal */}
+      {showProgramModal && selectedSlot && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Adaugă în Program</h2>
+              <button
+                onClick={() => {
+                  setShowProgramModal(false);
+                  setSelectedSlot(null);
+                }}
+                className="p-2 hover:bg-gray-100 rounded-lg transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="mb-4 p-4 bg-purple-50 rounded-lg">
+              <p className="text-sm text-gray-600">Zi: <span className="font-bold text-gray-900">{selectedSlot.zi}</span></p>
+              <p className="text-sm text-gray-600">Ora start: <span className="font-bold text-gray-900">{selectedSlot.ora}</span></p>
+            </div>
+
+            <div className="space-y-4">
+              {optionale.map((optional) => (
+                <div key={optional.id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-purple-400 transition">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-3xl">{optional.icon}</span>
+                    <div>
+                      <p className="font-bold text-gray-900">{optional.nume}</p>
+                      <p className="text-sm text-gray-600">
+                        {optional.pret} lei{(optional.tipPret || 'lunar') === 'sedinta' ? '/ședință' : '/lună'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <select
+                      id={`oraEnd-${optional.id}`}
+                      className="flex-1 px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none text-sm"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>Selectează ora sfârșit</option>
+                      {ore
+                        .filter(o => parseInt(o.split(':')[0]) > parseInt(selectedSlot.ora.split(':')[0]))
+                        .map(o => (
+                          <option key={o} value={o}>{o}</option>
+                        ))
+                      }
+                    </select>
+                    <button
+                      onClick={() => {
+                        const select = document.getElementById(`oraEnd-${optional.id}`) as HTMLSelectElement;
+                        const oraEnd = select.value;
+                        if (oraEnd) {
+                          handleAddProgram(optional.id, selectedSlot.ora, oraEnd);
+                        } else {
+                          alert('Te rugăm să selectezi ora sfârșit!');
+                        }
+                      }}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 transition text-sm"
+                    >
+                      Adaugă
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => {
+                setShowProgramModal(false);
+                setSelectedSlot(null);
+              }}
+              className="w-full mt-4 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition"
+            >
+              Anulează
+            </button>
           </div>
         </div>
       )}

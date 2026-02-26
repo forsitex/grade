@@ -47,6 +47,17 @@ export default function LoginPage() {
         return;
       }
 
+      // Verifică dacă este profesor opționale
+      const profesorRef = doc(db, 'profesori', user.uid);
+      const profesorSnap = await getDoc(profesorRef);
+
+      if (profesorSnap.exists()) {
+        // Este profesor → Dashboard profesor
+        console.log('✅ Login profesor:', email);
+        router.push('/dashboard-profesor');
+        return;
+      }
+
       // Altfel, este admin → Dashboard principal
       console.log('✅ Login admin:', email);
       router.push('/dashboard');

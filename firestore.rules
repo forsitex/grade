@@ -43,6 +43,11 @@ service cloud.firestore {
         match /attendance/{date}/grupe/{grupaId}/copii/{cnp} {
           allow read, write: if request.auth != null && request.auth.uid == userId;
         }
+        
+        // Opționale (manager poate crea/edita/șterge)
+        match /optionale/{optionalId} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
       }
     }
     
@@ -82,10 +87,98 @@ service cloud.firestore {
                         exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
                         get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId;
       }
+      
+      // Educatoarea poate DOAR CITI opționalele (NU create/delete)
+      match /optionale/{optionalId} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId;
+        
+        // Educatoarea poate actualiza DOAR lista de copii (alocare)
+        allow update: if request.auth != null && 
+                         exists(/databases/$(database)/documents/educatoare/$(request.auth.uid)) &&
+                         get(/databases/$(database)/documents/educatoare/$(request.auth.uid)).data.organizationId == orgId;
+      }
     }
     
     // ========================================
-    // 3. PĂRINȚI
+    // 3. PROFESORI OPȚIONALE
+    // ========================================
+    match /profesori/{userId} {
+      // Profesorul poate citi DOAR propriul document
+      allow read: if request.auth != null && request.auth.uid == userId;
+      // Doar admin-ul poate crea/actualiza (prin API)
+      allow write: if request.auth != null;
+    }
+    
+    // Profesorul poate citi datele organizației sale
+    match /organizations/{orgId}/locations/{locationId} {
+      // Verifică dacă user-ul este profesor în această organizație
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/profesori/$(request.auth.uid)) &&
+                     get(/databases/$(database)/documents/profesori/$(request.auth.uid)).data.organizationId == orgId;
+      
+      // Profesorul poate citi copiii înscriși la opționalul său
+      match /children/{cnp} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/profesori/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/profesori/$(request.auth.uid)).data.organizationId == orgId;
+      }
+      
+      // Profesorul poate citi DOAR opționalul său
+      match /optionale/{optionalId} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/profesori/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/profesori/$(request.auth.uid)).data.organizationId == orgId &&
+                       get(/databases/$(database)/documents/profesori/$(request.auth.uid)).data.optionalId == optionalId;
+      }
+    }
+    
+    // ========================================
+    // PREZENȚE & COMENTARII OPȚIONALE
+    // ========================================
+    
+    // Profesorul poate gestiona prezențe și comentarii
+    match /prezente/{prezenteId} {
+      // Manager poate citi toate prezențele
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/organizations/$(request.auth.uid));
+      
+      // Profesorul poate crea/citi/actualiza prezențe pentru opționalul său
+      allow read, write: if request.auth != null && 
+                            exists(/databases/$(database)/documents/profesori/$(request.auth.uid));
+      
+      // Educatoarea poate citi prezențele copiilor din grupa ei
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/educatoare/$(request.auth.uid));
+      
+      // Părintele poate citi DOAR prezențele copilului său
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                     resource.data.copilId == get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.copilCnp;
+    }
+    
+    match /comentarii/{comentariuId} {
+      // Manager poate citi toate comentariile
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/organizations/$(request.auth.uid));
+      
+      // Profesorul poate crea/citi comentarii pentru copiii săi
+      allow read, write: if request.auth != null && 
+                            exists(/databases/$(database)/documents/profesori/$(request.auth.uid));
+      
+      // Educatoarea poate citi comentariile copiilor din grupa ei
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/educatoare/$(request.auth.uid));
+      
+      // Părintele poate citi DOAR comentariile copilului său
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                     resource.data.copilId == get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.copilCnp;
+    }
+    
+    // ========================================
+    // 4. PĂRINȚI
     // ========================================
     match /parinti/{userId} {
       // Părintele poate citi DOAR propriul document
@@ -143,8 +236,15 @@ service cloud.firestore {
                        get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId;
       }
       
+      // Părintele poate citi opționalele
+      match /optionale/{optionalId} {
+        allow read: if request.auth != null && 
+                       exists(/databases/$(database)/documents/parinti/$(request.auth.uid)) &&
+                       get(/databases/$(database)/documents/parinti/$(request.auth.uid)).data.organizationId == orgId;
+      }
+      
       // ========================================
-      // 4. MESAGERIE (Educatoare ↔ Părinți)
+      // 5. MESAGERIE (Educatoare ↔ Părinți)
       // ========================================
       match /messages/{messageId} {
         // Manager poate citi/scrie toate mesajele
@@ -189,6 +289,7 @@ service cloud.firestore {
                          (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
       }
     }
+    
     
     // ========================================
     // FALLBACK pentru Development - TEMPORAR

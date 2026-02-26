@@ -1,0 +1,73 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "prezente",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "profesorId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "data",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "prezent",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "comentarii",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "copilId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "optionalId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "comentarii",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "profesorId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "data",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "messages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "to",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "read",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
