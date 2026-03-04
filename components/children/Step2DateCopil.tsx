@@ -1,5 +1,5 @@
-import { Baby, Calendar, AlertCircle } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Baby, Calendar, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface Step2Props {
   formData: any;
@@ -7,7 +7,7 @@ interface Step2Props {
 }
 
 export default function Step2DateCopil({ formData, onChange }: Step2Props) {
-  const [cnpError, setCnpError] = useState('');
+  const [cnpError, setCnpError] = useState("");
 
   // Validare și extragere dată naștere din CNP
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
 
       // Validare lună și zi
       if (luna < 1 || luna > 12 || zi < 1 || zi > 31) {
-        setCnpError('CNP invalid: lună sau zi incorectă');
+        setCnpError("CNP invalid: lună sau zi incorectă");
         return;
       }
 
@@ -30,19 +30,19 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
       } else if (primaCifra === 5 || primaCifra === 6) {
         anNastere += 2000;
       } else {
-        setCnpError('CNP invalid: prima cifră trebuie să fie 1, 2, 5 sau 6');
+        setCnpError("CNP invalid: prima cifră trebuie să fie 1, 2, 5 sau 6");
         return;
       }
 
       // Formatare dată
-      const dataNasterii = `${anNastere}-${luna.toString().padStart(2, '0')}-${zi.toString().padStart(2, '0')}`;
-      onChange('dataNasterii', dataNasterii);
-      setCnpError('');
+      const dataNasterii = `${anNastere}-${luna.toString().padStart(2, "0")}-${zi.toString().padStart(2, "0")}`;
+      onChange("dataNasterii", dataNasterii);
+      setCnpError("");
     } else if (formData.cnp.length > 0) {
-      setCnpError('CNP-ul trebuie să aibă exact 13 cifre');
+      setCnpError("CNP-ul trebuie să aibă exact 13 cifre");
     } else {
-      setCnpError('');
-      onChange('dataNasterii', '');
+      setCnpError("");
+      onChange("dataNasterii", "");
     }
   }, [formData.cnp]);
 
@@ -56,7 +56,7 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
         <input
           type="text"
           value={formData.nume}
-          onChange={(e) => onChange('nume', e.target.value.toUpperCase())}
+          onChange={(e) => onChange("nume", e.target.value.toUpperCase())}
           className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition uppercase"
           placeholder="ex: POPESCU ANDREI"
           required
@@ -66,14 +66,19 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
       {/* CNP */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          CNP * <span className="text-xs text-gray-500">(nu poate fi modificat)</span>
+          CNP *
         </label>
         <input
           type="text"
           value={formData.cnp}
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
-          disabled
-          readOnly
+          onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, "").slice(0, 13);
+            onChange("cnp", value);
+          }}
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+          placeholder="ex: 5201112238943"
+          maxLength={13}
+          required
         />
         {cnpError && (
           <div className="mt-2 flex items-center gap-2 text-red-600 text-sm">
@@ -110,7 +115,7 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
         <input
           type="text"
           value={formData.adresa}
-          onChange={(e) => onChange('adresa', e.target.value)}
+          onChange={(e) => onChange("adresa", e.target.value)}
           className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
           placeholder="ex: Strada Primăverii nr. 5, București, Sector 2"
           required
@@ -124,7 +129,7 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
         </label>
         <textarea
           value={formData.alergii}
-          onChange={(e) => onChange('alergii', e.target.value)}
+          onChange={(e) => onChange("alergii", e.target.value)}
           className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
           placeholder="ex: Alergic la nuci, lactate, ou"
           rows={2}
@@ -141,7 +146,7 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
         </label>
         <textarea
           value={formData.conditiiMedicale}
-          onChange={(e) => onChange('conditiiMedicale', e.target.value)}
+          onChange={(e) => onChange("conditiiMedicale", e.target.value)}
           className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
           placeholder="ex: Astm ușor, necesită inhalator"
           rows={2}
@@ -161,7 +166,7 @@ export default function Step2DateCopil({ formData, onChange }: Step2Props) {
               const file = e.target.files?.[0];
               if (file) {
                 // TODO: Upload la Firebase Storage
-                console.log('Upload foto:', file);
+                console.log("Upload foto:", file);
               }
             }}
             className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 transition"
